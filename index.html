@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vucar AI Sales Agent — Demo harness (deal thật)</title>
+<style>
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  :root{
+    --bg:#f4f6f9; --card:#ffffff; --border:#e6e9ef; --line:#f0f2f5;
+    --text:#1a2230; --muted:#5f6b7d; --dim:#9aa4b2;
+    --blue:#1479e6; --blue-soft:#eaf3fe; --blue-line:#cfe4fb;
+    --green:#1a9d54; --green-soft:#eaf7ef;
+  }
+  body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
+  code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+
+  /* Top bar */
+  .topbar{ background:var(--card); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:20px; position:sticky; top:0; z-index:50; }
+  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; font-size:19px; color:var(--blue); letter-spacing:-.4px; }
+  .brand svg{ width:26px; height:26px; }
+  .steps{ display:flex; gap:6px; margin:0 auto; }
+  .step{ display:flex; align-items:center; gap:8px; padding:7px 14px; border-radius:8px; border:1px solid var(--border); background:var(--card); cursor:pointer; transition:.15s; }
+  .step:hover{ border-color:var(--blue-line); }
+  .step.active{ background:var(--blue-soft); border-color:var(--blue); }
+  .step .n{ width:20px; height:20px; border-radius:50%; background:#eef1f5; color:var(--muted); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .step.active .n{ background:var(--blue); color:#fff; }
+  .step.done .n{ background:var(--green); color:#fff; }
+  .step .lbl{ font-size:13px; font-weight:600; color:var(--muted); white-space:nowrap; }
+  .step.active .lbl{ color:var(--text); }
+  .conn{ display:flex; align-items:center; gap:7px; color:var(--green); font-size:13px; font-weight:600; white-space:nowrap; }
+  .conn .dot{ width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 1.6s infinite; }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* Layout: 2 vertical sections */
+  .wrap{ max-width:1360px; margin:0 auto; padding:22px; display:grid; grid-template-columns:1.3fr 1fr; gap:22px; align-items:start; }
+  @media(max-width:1000px){ .wrap{ grid-template-columns:1fr; } }
+  .col-h{ font-size:12px; font-weight:700; letter-spacing:.4px; color:var(--dim); text-transform:uppercase; margin:0 2px 12px; }
+
+  .stage-head{ margin:0 2px 14px; }
+  .stage-head h1{ font-size:20px; letter-spacing:-.3px; }
+  .stage-head p{ font-size:13px; color:var(--muted); margin-top:4px; max-width:640px; }
+
+  .lead{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 15px; display:flex; align-items:center; gap:12px; margin-bottom:13px; }
+  .lead .who{ font-size:14px; font-weight:600; }
+  .lead .who small{ display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:1px; }
+  .lead .price{ margin-left:auto; text-align:right; }
+  .lead .price .k{ font-size:10.5px; color:var(--dim); }
+  .lead .price .v{ font-size:15px; font-weight:700; color:var(--blue); }
+
+  /* Avatar */
+  .ava{ border-radius:50%; position:relative; overflow:hidden; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:600; flex:0 0 auto; }
+  .ava.cust{ background:#8a97a8; }
+  .ava::after{ content:attr(data-init); }
+  .ava img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  .ava.lg{ width:40px; height:40px; font-size:15px; }
+  .ava.sm{ width:28px; height:28px; font-size:12px; }
+
+  /* Action card */
+  .acard{ background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:14px; }
+  .acard-h{ display:flex; align-items:center; padding:12px 16px; border-bottom:1px solid var(--line); }
+  .acard-h .t{ font-weight:600; font-size:14px; }
+  .acard-h .st{ margin-left:auto; font-size:11.5px; font-weight:600; padding:3px 11px; border-radius:20px; background:var(--green-soft); color:var(--green); }
+  .acard-b{ padding:2px 16px 12px; display:grid; grid-template-columns:1fr 1fr; gap:0 22px; }
+  .row{ display:flex; justify-content:space-between; gap:12px; padding:8px 0; border-bottom:1px solid var(--line); font-size:13px; }
+  .row .k{ color:var(--muted); }
+  .row .v{ color:var(--text); font-weight:600; text-align:right; }
+
+  /* Chat */
+  .chat-wrap{ background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .chat-top{ padding:12px 16px; display:flex; align-items:center; gap:11px; border-bottom:1px solid var(--line); }
+  .chat-top .who{ font-size:14px; font-weight:600; }
+  .chat-top .who small{ display:block; color:var(--muted); font-weight:400; font-size:12px; }
+  .chat-top .zalo{ margin-left:auto; color:var(--dim); font-size:11px; font-weight:700; letter-spacing:.5px; }
+  .chat{ padding:16px 15px; height:430px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:var(--bg); scroll-behavior:smooth; }
+  .chat::-webkit-scrollbar{ width:6px; } .chat::-webkit-scrollbar-thumb{ background:#d7dde5; border-radius:4px; }
+  .day{ text-align:center; font-size:11px; color:var(--dim); margin:2px 0; }
+  .line{ display:flex; gap:8px; align-items:flex-end; animation:pop .25s ease; }
+  .line.ai{ justify-content:flex-end; }
+  .line.cust{ justify-content:flex-start; }
+  @keyframes pop{ from{opacity:0; transform:translateY(5px)} to{opacity:1; transform:none} }
+  .bubble{ max-width:76%; padding:9px 13px; border-radius:14px; font-size:13px; }
+  .line.ai .bubble{ background:var(--blue); color:#fff; border-bottom-right-radius:4px; }
+  .line.cust .bubble{ background:var(--card); border:1px solid var(--border); border-bottom-left-radius:4px; }
+  .bubble .meta{ font-size:10px; opacity:.55; margin-top:4px; }
+  .bubble.photo{ font-style:italic; color:var(--muted); }
+  .sys{ align-self:center; max-width:90%; text-align:center; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:9px 13px; font-size:12px; color:var(--muted); }
+  .sys b{ color:var(--text); }
+  .sys .sys-h{ font-weight:600; color:var(--blue); margin-bottom:2px; font-size:11.5px; }
+  .chat-input{ display:flex; align-items:center; gap:10px; padding:11px 14px; border-top:1px solid var(--line); }
+  .chat-input .box{ flex:1; background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:9px 15px; color:var(--dim); font-size:13px; }
+  .chat-input .send{ width:34px; height:34px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; }
+
+  /* Action widgets (Sierra-style) */
+  .widget{ align-self:center; width:100%; max-width:360px; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:12px 14px; box-shadow:0 2px 6px rgba(15,23,42,.06); animation:pop .3s ease; }
+  .wg-h{ position:relative; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:var(--text); margin-bottom:12px; min-height:26px; }
+  .wg-h .nav{ position:absolute; width:24px; height:24px; border-radius:7px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:13px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .wg-h .nav.l{ left:0; } .wg-h .nav.r{ right:0; }
+  .wg-h .badge{ position:absolute; right:0; font-size:11px; font-weight:600; color:var(--blue); background:var(--blue-soft); border-radius:20px; padding:2px 9px; }
+  .slots{ display:flex; gap:6px; margin-bottom:12px; }
+  .slot{ flex:1; text-align:center; font-size:12.5px; color:var(--muted); padding:7px 0; border-radius:18px; background:var(--bg); }
+  .slot.sel{ background:var(--green); color:#fff; font-weight:600; }
+  .wg-btn{ width:100%; border-radius:10px; padding:11px; font-size:13px; font-weight:600; text-align:center; }
+  .wg-btn.done{ background:var(--green-soft); color:var(--green); }
+  .d-row{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--text); padding:5px 0; }
+  .d-row .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); flex:0 0 auto; }
+  .d-row .st{ margin-left:auto; font-size:11px; color:var(--green); }
+  .wg-result{ margin-top:9px; padding-top:10px; border-top:1px solid var(--line); display:flex; justify-content:space-between; align-items:center; font-size:13px; color:var(--muted); }
+  .wg-result b{ color:var(--blue); font-size:16px; }
+  .p-line{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); padding:5px 0; }
+  .p-line.big{ font-size:14px; color:var(--text); font-weight:600; padding:8px 0 10px; }
+  .p-line.big b{ color:var(--green); }
+  .fu-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
+  .fu-lbl{ font-size:13px; font-weight:600; color:var(--text); }
+  .fu-auto{ font-size:11px; font-weight:600; color:var(--blue); background:var(--blue-soft); border-radius:20px; padding:2px 9px; }
+  .fu-time{ display:flex; align-items:center; gap:7px; font-size:15px; font-weight:700; color:var(--blue); }
+  .fu-reason{ font-size:12px; color:var(--muted); margin-top:4px; }
+  .wg-learn{ border-color:#cfe6d8; }
+  .wl-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .wl-lbl{ font-size:13px; font-weight:600; color:var(--text); }
+  .wl-auto{ font-size:11px; font-weight:600; color:var(--green); background:var(--green-soft); border-radius:20px; padding:2px 9px; white-space:nowrap; }
+  .wl-item{ display:flex; gap:9px; padding:8px 0; border-bottom:1px solid var(--line); }
+  .wl-item:last-of-type{ border-bottom:none; }
+  .wl-ic{ flex:0 0 auto; font-size:13px; line-height:1.4; }
+  .wl-txt{ font-size:12px; color:var(--text); }
+  .wl-txt .tag{ display:inline-block; margin-top:4px; font-size:10.5px; font-weight:600; color:var(--blue); background:var(--blue-soft); border-radius:20px; padding:1px 8px; }
+  .wl-note{ margin-top:10px; padding-top:9px; border-top:1px solid var(--line); font-size:11px; color:var(--muted); }
+
+  /* AI Reasoning */
+  .rp{ background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; position:sticky; top:82px; }
+  .rp-h{ padding:15px 17px; border-bottom:1px solid var(--line); }
+  .rp-h .t{ font-size:15px; font-weight:700; }
+  .rp-h .s{ font-size:12px; color:var(--muted); margin-top:3px; }
+  .rp-h .run{ margin-top:9px; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:var(--muted); background:var(--bg); border:1px solid var(--border); border-radius:6px; padding:5px 9px; display:inline-block; }
+  .feed{ padding:14px 16px 18px; max-height:600px; overflow-y:auto; }
+  .feed::-webkit-scrollbar{ width:6px; } .feed::-webkit-scrollbar-thumb{ background:#d7dde5; border-radius:4px; }
+  .ti{ position:relative; padding:0 0 15px 22px; }
+  .ti::before{ content:''; position:absolute; left:4px; top:14px; bottom:-1px; width:1px; background:var(--border); }
+  .ti:last-child::before{ display:none; }
+  .ti .dot{ position:absolute; left:0; top:4px; width:9px; height:9px; border-radius:50%; background:#c7cfda; border:2px solid var(--card); box-shadow:0 0 0 1px var(--border); }
+  .ti.tool .dot, .ti.done .dot{ background:var(--blue); box-shadow:0 0 0 1px var(--blue-line); }
+  .ti.guard .dot{ background:var(--green); box-shadow:0 0 0 1px #bfe6cf; }
+  .ti .lab{ font-size:10px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:var(--dim); margin-bottom:2px; }
+  .ti.guard .lab{ color:var(--green); }
+  .ti .tx{ font-size:13px; color:var(--text); }
+  .ti.r .tx{ color:#3a4658; }
+  .ti .tx code{ font-size:12px; color:var(--blue); background:var(--blue-soft); border-radius:4px; padding:0 5px; }
+  .ti .tx .tn{ font-family:ui-monospace,Menlo,monospace; font-weight:700; color:var(--blue); }
+  .ti.guard .tx b, .ti.done .tx b{ color:var(--green); }
+
+  .foot{ max-width:1360px; margin:2px auto 26px; padding:12px 24px; font-size:11.5px; color:var(--dim); text-align:center; }
+  .foot code{ color:var(--muted); }
+  kbd{ background:#e7ebf1; border:1px solid #d7dde5; border-radius:5px; padding:1px 6px; font-size:11px; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#1479e6"/><path d="M13 20 h22 l-3 5 h-16 z" fill="#fff"/><rect x="16" y="26" width="16" height="4" rx="2" fill="#fff"/></svg>
+    Vucar
+  </div>
+  <div class="steps" id="steps"></div>
+  <div class="conn"><span class="dot"></span>Đang kết nối với AI</div>
+</div>
+
+<div class="wrap">
+  <!-- SECTION 1: product -->
+  <section>
+    <div class="stage-head">
+      <h1 id="stageTitle"></h1>
+      <p id="stageDesc"></p>
+    </div>
+    <div class="lead">
+      <span class="ava cust lg" data-init="H"><img src="assets/customer.jpg" onerror="this.remove()"></span>
+      <div class="who">Anh Hiếu<small>Hyundai Santafe 2.5L HTRAC 2021 · Hà Nội · 035****888</small></div>
+      <div class="price"><div class="k">Giá đề xuất bởi Vucar</div><div class="v">889.000.000 ₫</div></div>
+    </div>
+    <div class="acard" id="acard"></div>
+    <div class="chat-wrap">
+      <div class="chat-top">
+        <span class="ava cust lg" data-init="H"><img src="assets/customer.jpg" onerror="this.remove()"></span>
+        <div class="who">Anh Hiếu<small>Chủ xe · Santafe 2021</small></div>
+        <div class="zalo">ZALO</div>
+      </div>
+      <div class="chat" id="chat"></div>
+      <div class="chat-input"><div class="box">Nhập tin nhắn của bạn…</div><div class="send">➤</div></div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: behind-the-scenes -->
+  <section>
+    <div class="col-h">Hậu trường — Harness Architecture</div>
+    <div class="rp">
+      <div class="rp-h">
+        <div class="t">AI Reasoning · Chain of Thoughts</div>
+        <div class="s">Orchestrator (Claude) tự suy nghĩ &amp; gọi tool — trace thật từ harness</div>
+        <div class="run" id="runMeta"></div>
+      </div>
+      <div class="feed" id="feed"></div>
+    </div>
+  </section>
+</div>
+
+<div class="foot">
+  Trace thật từ <code>agent_pipeline_logs</code> (db=9) của deal <code>car_id 1dd7716f…</code> — Hyundai Santafe 2.5L HTRAC 2021, Hà Nội, 10–13/06/2026.
+  Hội thoại từ Zalo. Chain-of-thought dịch tiếng Việt; tên tool &amp; tham số giữ nguyên gốc. · Chuyển bước: <kbd>←</kbd> <kbd>→</kbd>
+</div>
+
+<script>
+const STAGES = [
+  {
+    label:'Đặt lịch & Kiểm định',
+    title:'1 · Đặt lịch & Kiểm định',
+    desc:'AI tự tiếp cận chủ xe, định tính (STRONG_QUALIFIED), đặt lịch kỹ thuật viên tận nơi và theo dõi tới khi kiểm định hoàn tất.',
+    card:{ t:'Đặt lịch & Kiểm định', st:'Hoàn tất', rows:[
+      ['Mã booking','BK-SANTAFE-0612'],['Lịch hẹn','16:30 · 12/06/2026'],
+      ['Kỹ thuật viên','Việt Phương'],['Trạng thái','INSPECTION_COMPLETED'],
+    ]},
+    chat:[
+      {day:'10/06/2026'},
+      {s:'ai', t:'Dạ em là nhân viên từ Vucar. Em liên hệ để hỗ trợ mình bán xe ạ.', m:'10:29'},
+      {s:'cust', t:'[Đồng ý kết bạn — “Santafe 2021”]', m:'10:30', photo:true},
+      {s:'ai', t:'Em hỗ trợ bán Hyundai Santafe 2.5L HTRAC 2021 ạ. Em đang có 2–3 người mua sẵn quan tâm dòng này.', m:'10:37'},
+      {wg:{type:'followup', time:'11/06 · 09:00', reason:'Nhắc nhẹ nếu khách chưa gửi ảnh xe (agent tự đặt qua schedule_followup)'}},
+      {s:'cust', t:'[Gửi 3 ảnh xe] Đây e', m:'10:52', photo:true},
+      {day:'12/06/2026'},
+      {wg:{type:'booking', date:'12/06 · Thứ 5', slots:[{t:'15:30'},{t:'16:00'},{t:'16:30',sel:true},{t:'17:00'},{t:'17:30'}], btn:'✓ Đã xác nhận · KTV Việt Phương'}},
+      {sys:'Kiểm định hoàn tất', t:'KTV <b>Việt Phương</b> · 12/06 → INSPECTION_COMPLETED'}
+    ],
+    run:'run 8337068c · 10/06 10:32 · trigger=customer_replied',
+    trace:[
+      {t:'r', x:'Khách vừa kết bạn Zalo. Xe Santafe 2021, 35k km, Hà Nội — stage &amp; qualify đang UNDEFINED, chưa có giá kỳ vọng.'},
+      {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state · read_lead_memory'},
+      {t:'skill', x:'recall_skills → <code>zalo-messaging</code> <code>signal-reading</code> <code>price-negotiation</code>'},
+      {t:'rag', x:'search_rag: “khách vừa kết bạn zalo, hỏi giá mong muốn và xin ảnh xe santafe 2021” — học từ ví dụ PIC thật'},
+      {t:'tool', n:'write_todos', x:'chào &amp; hỏi thông tin xe · xin ảnh · lên lịch follow-up'},
+      {t:'guard', x:'review_message → <b>APPROVED</b>'},
+      {t:'act', x:'send_zalo_message: “Dạ em chào anh Hiếu ạ… bên em đang có 2-3 bên mua quan tâm dòng Santafe 2021…”'},
+      {t:'tool', n:'schedule_followup', x:'2026-06-11 09:00 — nhắc nếu khách chưa gửi ảnh'},
+      {t:'done', x:'Đã chào, hỏi giá kỳ vọng (P1) + xin ảnh; định tính <b>STRONG_QUALIFIED</b>; đặt lịch kiểm định tận nơi.'}
+    ]
+  },
+  {
+    label:'Định giá & Tìm bid',
+    title:'2 · Định giá & Tìm bid tốt nhất',
+    desc:'Từ tình trạng thực tế, AI tính lại khoảng giá thị trường và đẩy xe ra mạng lưới dealer để tìm bid tốt nhất — chưa cam kết con số khi chưa có bid thật.',
+    card:{ t:'Định giá & Đấu giá dealer', st:'Có bid', rows:[
+      ['Điểm kiểm định','GOOD · chính chủ'],['Giá kỳ vọng','920tr → 915tr'],
+      ['Đẩy tới','14 dealer · 5 nhóm'],['Bid cao nhất','840 tr'],
+    ]},
+    chat:[
+      {day:'12/06/2026'},
+      {s:'cust', t:'Xe a đi ít lắm, thay dàn lốp Michelin, đèn pha nâng cấp giữ bộ zin, bảo dưỡng toàn trong hãng.', m:'10:32'},
+      {s:'ai', t:'Dạ xe anh giữ gìn cẩn thận và lên đồ xịn quá ạ. Em ghi nhận mức giá anh bớt lộc còn <b>915 triệu</b> nha.', m:'10:36'},
+      {s:'cust', t:'[Gửi 4 ảnh nội thất + đăng kiểm] Đây e nhé', m:'11:32', photo:true},
+      {wg:{type:'dealers', title:'Gửi mạng lưới dealer', badge:'14 dealer', rows:['Bảo Sơn Auto','Anh Cường xe Vin','A Giang Vĩnh Phúc','A Hướng'], resultLabel:'Bid cao nhất', result:'840 tr'}}
+    ],
+    run:'run aa66fa82 · 12/06 11:34 · request_dealer_bids',
+    trace:[
+      {t:'r', x:'Khách gửi đủ 4 ảnh nội thất + đăng kiểm → xe đủ điều kiện đẩy mạng lưới mua.'},
+      {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state'},
+      {t:'sig', x:'M1 thị trường (N=19): dealer 891–912tr · retail 945–970tr (TIME_DECAY) · P4 threshold zone E (840–845)'},
+      {t:'skill', x:'recall_skills → <code>booking-inspection</code> <code>signal-reading</code> <code>zalo-messaging</code>'},
+      {t:'tool', n:'check_inspection_status', x:'→ booking đang in-progress'},
+      {t:'tool', n:'request_dealer_bids', x:'manual=false → đẩy xe tới <b>14 dealer</b> (5 nhóm Zalo)'},
+      {t:'guard', x:'review_message → <b>APPROVED</b> (không báo số giá · không từ cấm · cảm ơn ảnh + nhắc lịch KĐ)'},
+      {t:'act', x:'send_zalo_message: “Dạ em nhận được ảnh rồi ạ… chiều nay 16h30 kỹ thuật viên qua kiểm tra…”'},
+      {t:'done', x:'Định giá theo khoảng thị trường + request bid tới 14 dealer; bid cao nhất ghi nhận <b>840tr</b>.'}
+    ]
+  },
+  {
+    label:'Thương lượng & Chốt',
+    title:'3 · Thương lượng & Chốt deal',
+    desc:'AI lý luận feasibility, guardrail duyệt tin để không cam kết sai, rồi chốt deal — 889 triệu, cao hơn cả bid dealer và ước tính của mô hình.',
+    card:{ t:'Thương lượng & Chốt', st:'COMPLETED', rows:[
+      ['Giá chốt','889 tr'],['So với kỳ vọng','97% (915tr)'],
+      ['So với bid dealer','+49 tr trên 840tr'],['Vòng đời deal','3 ngày (10→13/06)'],
+    ]},
+    chat:[
+      {day:'12/06/2026'},
+      {s:'ai', t:'Xe mình kỳ vọng 920tr, anh có thể bớt thêm chút để dễ chốt không ạ?', m:'09:31'},
+      {s:'cust', t:'A có bớt 1 chút để ra lộc cho khách mà e.', m:'10:16'},
+      {s:'cust', t:'Thế bên e thu phí là bao nhiêu?', m:'10:27'},
+      {s:'ai', t:'Dạ bên em chỉ thu phí <b>sau khi giao dịch thành công</b>, mức phí tùy giá bán thực tế ạ. Anh cứ yên tâm để em kết nối bên mua trước nhé.', m:'10:30'},
+      {day:'13/06/2026'},
+      {s:'cust', t:'E bảo người ta <b>890tr</b>, a còn phải trả phí bên e nữa… a cũng lắng nghe tư vấn của e đấy.', m:'14:17'},
+      {wg:{type:'deposit', title:'Chốt & đặt cọc', lines:[{k:'Kỳ vọng khách', v:'915 tr'},{k:'Bid dealer cao nhất', v:'840 tr'},{k:'Giá chốt', v:'889 tr', big:true}], btn:'✓ COMPLETED · DEPOSIT_PAID'}},
+      {wg:{type:'learning', insights:[
+        {text:'Khách hỏi “bên em thu phí thế nào?” <b>sau khi</b> đã hẹn kiểm định = tín hiệu mua mạnh → trả lời ngay: người bán <b>miễn phí 100%</b>.', tag:'khớp đúng tin 10:27 của deal này'},
+        {text:'Bot gửi nhầm thông tin xe → ngừng tự động &amp; chuyển người NGAY (xin lỗi sau không đủ giữ khách).', tag:'rút từ case lỗi thật'}
+      ], note:'Agent liên tục rút mẫu hình từ hội thoại thật (agent_insights). Mỗi mẫu qua <b>2 cửa duyệt người</b> + kiểm chứng bằng deal thắng trước khi thành kỹ năng — không tự tin dùng khi chưa xác nhận.'}}
+    ],
+    run:'run a6fc0282 · 12/06 10:34 · trigger=customer_replied',
+    trace:[
+      {t:'r', x:'Khách “thay lốp Michelin, độ đèn giữ zin, bảo dưỡng hãng, bớt 5tr còn 915tr”.'},
+      {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state · read_lead_memory'},
+      {t:'sig', x:'win_prob <b>0.547</b> · P1 920tr · P2 bid <b>840tr</b> · P3 đối thủ KHÔNG · M1 dealer 891–912tr'},
+      {t:'skill', x:'recall_skills → <code>price-negotiation</code> <code>booking-inspection</code> <code>zalo-messaging</code>'},
+      {t:'r', x:'915tr sát trần feasibility ~911.7tr → <b>CLOSABLE_NEGOTIATE</b>. 0 bid thật, chỉ ước tính CRM 840tr → chưa cam kết con số Vucar.'},
+      {t:'r', x:'“Em ghi nhận giá” KHÔNG phải cam kết mua 915tr → an toàn. Ghi stage NEGOTIATION · STRONG_QUALIFIED.'},
+      {t:'guard', x:'review_message → <b>APPROVED</b>: “915tr do khách nêu, không phải VO của Vucar; không từ cấm; tone thân thiện.”'},
+      {t:'act', x:'send_zalo_message (ghi nhận 915tr + link kiểm định) · schedule_followup 15:00'},
+      {t:'done', x:'Sau kiểm định, khách đồng thuận 890tr → chốt <b>889tr</b> (COMPLETED) — vượt cả ước tính 840tr &amp; win_prob 0.547.'}
+    ]
+  }
+];
+
+const LAB = { r:'Suy nghĩ', ctx:'Nạp bối cảnh', sig:'Tín hiệu deal', skill:'Recall kỹ năng',
+  rag:'RAG · học từ PIC', tool:'Gọi tool', guard:'Guardrail', act:'Gửi khách', done:'Kết luận' };
+
+let cur = 0;
+const $ = id => document.getElementById(id);
+const avaAgent = '<span class="ava sm" data-init="V"><img src="assets/agent.jpg" onerror="this.remove()"></span>';
+const avaCust = '<span class="ava cust sm" data-init="H"><img src="assets/customer.jpg" onerror="this.remove()"></span>';
+
+function renderSteps(){
+  $('steps').innerHTML = STAGES.map((s,i)=>
+    `<div class="step ${i===cur?'active':''} ${i<cur?'done':''}" data-i="${i}"><span class="n">${i<cur?'✓':i+1}</span><span class="lbl">${s.label}</span></div>`
+  ).join('');
+  document.querySelectorAll('.step').forEach(el=> el.onclick=()=>{ cur=+el.dataset.i; render(); });
+}
+function renderCard(){
+  const c = STAGES[cur].card;
+  $('acard').innerHTML =
+    `<div class="acard-h"><span class="t">${c.t}</span><span class="st">${c.st}</span></div>`+
+    `<div class="acard-b">`+ c.rows.map(r=>`<div class="row"><span class="k">${r[0]}</span><span class="v">${r[1]}</span></div>`).join('') +`</div>`;
+}
+function widgetHTML(w){
+  if(w.type==='booking') return `<div class="widget"><div class="wg-h"><span class="nav l">‹</span>${w.date}<span class="nav r">›</span></div>`+
+    `<div class="slots">`+w.slots.map(s=>`<span class="slot ${s.sel?'sel':''}">${s.t}</span>`).join('')+`</div>`+
+    `<div class="wg-btn done">${w.btn}</div></div>`;
+  if(w.type==='dealers') return `<div class="widget"><div class="wg-h">${w.title}<span class="badge">${w.badge}</span></div>`+
+    w.rows.map(r=>`<div class="d-row"><span class="dot"></span>${r}<span class="st">đã gửi</span></div>`).join('')+
+    `<div class="wg-result"><span>${w.resultLabel}</span><b>${w.result}</b></div></div>`;
+  if(w.type==='deposit') return `<div class="widget"><div class="wg-h">${w.title}</div>`+
+    w.lines.map(l=>`<div class="p-line ${l.big?'big':''}"><span>${l.k}</span><span>${l.big?'<b>'+l.v+'</b>':l.v}</span></div>`).join('')+
+    `<div class="wg-btn done">${w.btn}</div></div>`;
+  if(w.type==='followup') return `<div class="widget"><div class="fu-top"><span class="fu-lbl">⏰ Lên lịch nhắc follow-up</span><span class="fu-auto">tự động</span></div>`+
+    `<div class="fu-time">🕘 ${w.time}</div><div class="fu-reason">${w.reason}</div></div>`;
+  if(w.type==='learning') return `<div class="widget wg-learn"><div class="wl-top"><span class="wl-lbl">♻️ Self-learning · mẫu hình từ deal thật</span><span class="wl-auto">chờ người duyệt</span></div>`+
+    w.insights.map(it=>`<div class="wl-item"><span class="wl-ic">💡</span><div class="wl-txt">${it.text}${it.tag?`<div class="tag">${it.tag}</div>`:''}</div></div>`).join('')+
+    `<div class="wl-note">${w.note}</div></div>`;
+  return '';
+}
+function renderChat(){
+  $('chat').innerHTML = STAGES[cur].chat.map((c,idx)=>{
+    if(c.day) return `<div class="day">— ${c.day} —</div>`;
+    if(c.wg) return widgetHTML(c.wg);
+    if(c.sys!==undefined) return `<div class="sys"><div class="sys-h">${c.sys}</div>${c.t}</div>`;
+    const meta = c.m?`<div class="meta">${c.m}</div>`:'';
+    const bub = `<div class="bubble ${c.photo?'photo':''}">${c.t.replace(/\n/g,'<br>')}${meta}</div>`;
+    if(c.s==='ai') return `<div class="line ai" style="animation-delay:${idx*0.03}s">${bub}${avaAgent}</div>`;
+    return `<div class="line cust" style="animation-delay:${idx*0.03}s">${avaCust}${bub}</div>`;
+  }).join('');
+  $('chat').scrollTop = 0;
+}
+function renderFeed(){
+  const st = STAGES[cur];
+  $('runMeta').textContent = '▶ '+st.run;
+  $('feed').innerHTML = st.trace.map((it,idx)=>{
+    let tx = it.t==='tool' ? `<span class="tn">${it.n}</span> — ${it.x}` : it.x;
+    return `<div class="ti ${it.t}" style="animation:pop .25s ease ${idx*0.04}s both">`+
+      `<span class="dot"></span><div class="lab">${LAB[it.t]||''}</div><div class="tx">${tx}</div></div>`;
+  }).join('');
+  $('feed').scrollTop = 0;
+}
+function render(){
+  renderSteps();
+  $('stageTitle').textContent = STAGES[cur].title;
+  $('stageDesc').innerHTML = STAGES[cur].desc;
+  renderCard(); renderChat(); renderFeed();
+}
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight' && cur<STAGES.length-1){ cur++; render(); }
+  if(e.key==='ArrowLeft' && cur>0){ cur--; render(); }
+});
+render();
+</script>
+</body>
+</html>
