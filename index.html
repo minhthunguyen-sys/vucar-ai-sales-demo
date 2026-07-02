@@ -151,6 +151,56 @@
   .foot{ max-width:1360px; margin:2px auto 26px; padding:12px 24px; font-size:11.5px; color:var(--dim); text-align:center; }
   .foot code{ color:var(--muted); }
   kbd{ background:#e7ebf1; border:1px solid #d7dde5; border-radius:5px; padding:1px 6px; font-size:11px; color:var(--muted); }
+
+  /* View switcher */
+  .views{ display:flex; gap:3px; background:#eef1f5; border-radius:9px; padding:3px; }
+  .vbtn{ border:0; background:transparent; font-family:inherit; font-size:13px; font-weight:600; color:var(--muted); padding:6px 14px; border-radius:7px; cursor:pointer; }
+  .vbtn.active{ background:var(--card); color:var(--blue); box-shadow:0 1px 2px rgba(15,23,42,.08); }
+  .view{ display:none; }
+  .view.active{ display:block; }
+  #viewDeal.active{ display:grid; }
+
+  /* Architecture view */
+  .archwrap{ max-width:1040px; margin:0 auto; padding:26px 22px 44px; }
+  .arch-title{ text-align:center; font-size:22px; letter-spacing:-.3px; }
+  .arch-sub{ text-align:center; color:var(--muted); font-size:14px; margin-top:6px; max-width:660px; margin-left:auto; margin-right:auto; }
+  .section-lbl{ font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--dim); text-align:center; margin:36px 0 18px; }
+  .diagram{ display:grid; grid-template-columns:1fr 44px 1.15fr 44px 1fr; grid-template-rows:auto 30px auto 30px auto; align-items:center; justify-items:center; max-width:820px; margin:0 auto; }
+  .node{ width:100%; max-width:220px; background:#f4f3ef; border:1px solid #e3e2db; border-radius:14px; padding:13px 14px; text-align:center; cursor:pointer; transition:.15s; }
+  .node:hover{ border-color:var(--blue); transform:translateY(-2px); }
+  .node.active{ border-color:var(--blue); box-shadow:0 0 0 2px var(--blue-soft); background:#fff; }
+  .node .nh{ font-size:13.5px; font-weight:700; }
+  .node .nsub{ font-size:10px; color:var(--muted); margin-top:1px; }
+  .node .nico{ font-size:22px; margin-top:7px; line-height:1; }
+  .node.center{ background:#fff; border-color:var(--blue); }
+  .node.center .nico{ color:var(--blue); }
+  .conn2{ color:#b9c1cd; font-size:19px; user-select:none; }
+  .g-tools{ grid-area:1/3 } .g-va1{ grid-area:2/3 } .g-session{ grid-area:3/1 } .g-ha1{ grid-area:3/2 }
+  .g-harness{ grid-area:3/3 } .g-ha2{ grid-area:3/4 } .g-sandbox{ grid-area:3/5 } .g-va2{ grid-area:4/3 } .g-orch{ grid-area:5/3 }
+  @media(max-width:720px){ .diagram{ grid-template-columns:1fr; grid-template-rows:none; } .conn2{ transform:rotate(90deg); } .g-tools,.g-va1,.g-session,.g-ha1,.g-harness,.g-ha2,.g-sandbox,.g-va2,.g-orch{ grid-area:auto; } }
+  .ndetail{ max-width:720px; margin:20px auto 0; background:var(--card); border:1px solid var(--border); border-left:3px solid var(--blue); border-radius:12px; padding:14px 18px; }
+  .ndetail .dt{ font-weight:700; font-size:14.5px; }
+  .ndetail .dmap{ font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.55; }
+  .ndetail .dmap code{ font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--blue); background:var(--blue-soft); border-radius:4px; padding:0 5px; }
+  .ndetail .dstat{ margin-top:9px; font-size:12.5px; color:var(--blue); font-weight:700; }
+
+  /* Flywheel + scale */
+  .flywheel{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:7px; max-width:820px; margin:0 auto 26px; }
+  .fw{ background:var(--card); border:1px solid var(--border); border-radius:20px; padding:8px 14px; font-size:12.5px; font-weight:600; color:var(--text); }
+  .fw.loop{ color:var(--blue); border-color:var(--blue-line); background:var(--blue-soft); }
+  .fw-a{ color:var(--blue); font-weight:800; }
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:900px; margin:0 auto; }
+  @media(max-width:760px){ .stats{ grid-template-columns:repeat(2,1fr); } }
+  .stat{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; }
+  .stat .num{ font-size:25px; font-weight:800; color:var(--blue); letter-spacing:-.5px; }
+  .stat .lab{ font-size:11.5px; color:var(--muted); margin-top:4px; }
+  .arch-cta{ text-align:center; margin-top:34px; }
+  .arch-cta button{ font-family:inherit; background:var(--blue); color:#fff; border:0; border-radius:10px; padding:12px 22px; font-size:14px; font-weight:600; cursor:pointer; }
+
+  /* Thinking / typing */
+  .thinking{ display:flex; align-items:center; gap:7px; padding:2px 0 0 22px; font-size:12px; color:var(--blue); font-weight:600; }
+  .thinking .cur{ width:7px; height:13px; background:var(--blue); display:inline-block; border-radius:1px; animation:blink 1s steps(1) infinite; }
+  @keyframes blink{ 50%{ opacity:0 } }
 </style>
 </head>
 <body>
@@ -160,11 +210,58 @@
     <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#1479e6"/><path d="M13 20 h22 l-3 5 h-16 z" fill="#fff"/><rect x="16" y="26" width="16" height="4" rx="2" fill="#fff"/></svg>
     Vucar
   </div>
-  <div class="steps" id="steps"></div>
+  <div class="views" id="views">
+    <button class="vbtn active" data-v="arch">Kiến trúc &amp; Vì sao</button>
+    <button class="vbtn" data-v="deal">Deal thật</button>
+  </div>
+  <div class="steps" id="steps" style="display:none"></div>
   <div class="conn"><span class="dot"></span>Đang kết nối với AI</div>
 </div>
 
-<div class="wrap">
+<!-- VIEW: Architecture & Why -->
+<div class="view active archwrap" id="viewArch">
+  <div class="arch-title">Vucar AI Sales Agent được tổ chức thế nào</div>
+  <div class="arch-sub">Một harness duy nhất (Orchestrator · Claude) điều phối mọi công cụ, trí nhớ, guardrail và luồng — build once, deploy mọi kênh.</div>
+
+  <div class="section-lbl">Kiến trúc harness</div>
+  <div class="diagram" id="diagram">
+    <div class="node g-tools" data-k="tools"><div class="nh">Tools + MCP</div><div class="nsub">Resources / Connectors</div><div class="nico">🧰</div></div>
+    <div class="conn2 g-va1">⇅</div>
+    <div class="node g-session" data-k="session"><div class="nh">Session</div><div class="nsub">Trí nhớ deal</div><div class="nico">🗂️</div></div>
+    <div class="conn2 g-ha1">⇄</div>
+    <div class="node center g-harness" data-k="harness"><div class="nh">Harness</div><div class="nsub">Orchestrator · Claude</div><div class="nico">✳️</div></div>
+    <div class="conn2 g-ha2">⇄</div>
+    <div class="node g-sandbox" data-k="sandbox"><div class="nh">Sandbox · Guardrail</div><div class="nsub">Kiểm duyệt</div><div class="nico">🛡️</div></div>
+    <div class="conn2 g-va2">⇅</div>
+    <div class="node g-orch" data-k="orch"><div class="nh">Orchestration</div><div class="nsub">Luồng nhiều bước</div><div class="nico">🔀</div></div>
+  </div>
+  <div class="ndetail" id="ndetail"></div>
+
+  <div class="section-lbl">Vì sao nó chạy được — the flywheel</div>
+  <div class="flywheel">
+    <span class="fw">Hội thoại thật</span><span class="fw-a">→</span>
+    <span class="fw">Tín hiệu hành vi khách</span><span class="fw-a">→</span>
+    <span class="fw">Kỹ năng &amp; mẫu hình</span><span class="fw-a">→</span>
+    <span class="fw">Quyết định tốt hơn</span><span class="fw-a">→</span>
+    <span class="fw">Deal thắng</span><span class="fw-a">↺</span>
+    <span class="fw loop">Thêm dữ liệu</span>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num">1.07M</div><div class="lab">tin nhắn Zalo đã xử lý</div></div>
+    <div class="stat"><div class="num">35.744</div><div class="lab">khách hàng · 54K lead</div></div>
+    <div class="stat"><div class="num">74.321</div><div class="lab">phiên agent suy nghĩ</div></div>
+    <div class="stat"><div class="num">491</div><div class="lab">mẫu hình hành vi học được</div></div>
+    <div class="stat"><div class="num">22</div><div class="lab">kỹ năng active</div></div>
+    <div class="stat"><div class="num">158.301</div><div class="lab">lượt áp dụng kỹ năng</div></div>
+    <div class="stat"><div class="num">2.577</div><div class="lab">deal đã chốt</div></div>
+    <div class="stat"><div class="num">4.362</div><div class="lab">khách giới thiệu (referral)</div></div>
+  </div>
+  <div class="arch-sub" style="margin-top:22px">Agent chạy được vì đứng trên <b>dữ liệu hành vi khách tích luỹ</b> của Vucar — lợi thế khó sao chép. Càng nhiều deal, nó càng giỏi.</div>
+
+  <div class="arch-cta"><button data-v="deal">▶ Xem một deal thật</button></div>
+</div>
+
+<div class="wrap view" id="viewDeal">
   <!-- SECTION 1: product -->
   <section>
     <div class="stage-head">
@@ -355,15 +452,34 @@ function renderChat(){
   }).join('');
   $('chat').scrollTop = 0;
 }
+let feedGen = 0;
+function tiHTML(it){
+  let tx = it.t==='tool' ? `<span class="tn">${it.n}</span> — ${it.x}` : it.x;
+  return `<span class="dot"></span><div class="lab">${LAB[it.t]||''}</div><div class="tx">${tx}</div>`;
+}
 function renderFeed(){
   const st = STAGES[cur];
   $('runMeta').textContent = '▶ '+st.run;
-  $('feed').innerHTML = st.trace.map((it,idx)=>{
-    let tx = it.t==='tool' ? `<span class="tn">${it.n}</span> — ${it.x}` : it.x;
-    return `<div class="ti ${it.t}" style="animation:pop .25s ease ${idx*0.04}s both">`+
-      `<span class="dot"></span><div class="lab">${LAB[it.t]||''}</div><div class="tx">${tx}</div></div>`;
-  }).join('');
-  $('feed').scrollTop = 0;
+  const feed = $('feed');
+  const gen = ++feedGen;               // cancels any in-flight reveal
+  feed.innerHTML = '<div class="thinking">Agent đang suy nghĩ<span class="cur"></span></div>';
+  const think = feed.firstChild;
+  const items = st.trace;
+  let i = 0;
+  const step = ()=>{
+    if(gen !== feedGen) return;         // a newer render started → stop
+    if(i >= items.length){ if(think) think.remove(); return; }
+    const it = items[i++];
+    const el = document.createElement('div');
+    el.className = 'ti '+it.t;
+    el.style.animation = 'pop .28s ease both';
+    el.innerHTML = tiHTML(it);
+    feed.insertBefore(el, think);
+    feed.scrollTop = feed.scrollHeight;
+    const delay = it.t==='r' ? 620 : (it.t==='guard'||it.t==='done' ? 560 : 340);
+    setTimeout(step, delay);
+  };
+  setTimeout(step, 260);
 }
 function render(){
   renderSteps();
@@ -372,10 +488,41 @@ function render(){
   renderCard(); renderChat(); renderFeed();
 }
 document.addEventListener('keydown', e=>{
-  if(e.key==='ArrowRight' && cur<STAGES.length-1){ cur++; render(); }
-  if(e.key==='ArrowLeft' && cur>0){ cur--; render(); }
+  if(document.getElementById('viewDeal').classList.contains('active')){
+    if(e.key==='ArrowRight' && cur<STAGES.length-1){ cur++; render(); }
+    if(e.key==='ArrowLeft' && cur>0){ cur--; render(); }
+  }
 });
-render();
+
+// ---- Architecture view: node details ----
+const NODES = {
+  harness:{t:'Harness · Orchestrator (Claude)', map:'Vòng lặp lõi mỗi lượt: <code>compute_unified_deal_signals</code> → <code>recall_skills</code> → suy luận → hành động. Một bộ não điều phối tất cả.', stat:'74.321 phiên agent suy nghĩ'},
+  tools:{t:'Tools + Resources / MCP', map:'<code>book_inspection</code> · <code>request_dealer_bids</code> · <code>send_zalo_message</code> · connector CRM/DB · mạng lưới dealer. Thêm tool mới không phải viết lại agent.', stat:'Build once — deploy mọi kênh'},
+  session:{t:'Session — trí nhớ deal', map:'<code>read_session_state</code> · <code>read_lead_memory</code> — agent nhớ trạng thái, mood khách, lịch sử từng deal giữa các lượt.', stat:'35.744 hồ sơ khách'},
+  sandbox:{t:'Sandbox · Guardrail', map:'<code>review_message</code> duyệt từng tin trước khi gửi · <code>learning_validation_runs</code> kiểm chứng kỹ năng trước khi lên production.', stat:'Không bao giờ cam kết sai giá cho Vucar'},
+  orch:{t:'Orchestration — luồng nhiều bước', map:'<code>agent_pipeline_runs</code> · <code>schedule_followup</code> · cron học đêm — hướng sự kiện, tự lên lịch &amp; tự chạy tiếp mà không cần người.', stat:'Tự động xuyên suốt vòng đời deal'},
+};
+function showNode(k){
+  const n = NODES[k]; if(!n) return;
+  document.querySelectorAll('.node').forEach(el=> el.classList.toggle('active', el.dataset.k===k));
+  document.getElementById('ndetail').innerHTML =
+    `<div class="dt">${n.t}</div><div class="dmap">${n.map}</div><div class="dstat">● ${n.stat}</div>`;
+}
+document.querySelectorAll('.node').forEach(el=> el.onclick=()=> showNode(el.dataset.k));
+
+// ---- View switching ----
+function setView(v){
+  document.querySelectorAll('.vbtn').forEach(b=> b.classList.toggle('active', b.dataset.v===v));
+  document.getElementById('viewArch').classList.toggle('active', v==='arch');
+  document.getElementById('viewDeal').classList.toggle('active', v==='deal');
+  document.getElementById('steps').style.display = v==='deal' ? 'flex' : 'none';
+  window.scrollTo(0,0);
+  if(v==='deal') render();
+}
+document.querySelectorAll('[data-v]').forEach(b=> b.addEventListener('click', ()=> setView(b.dataset.v)));
+
+showNode('harness');
+setView('arch');
 </script>
 </body>
 </html>
