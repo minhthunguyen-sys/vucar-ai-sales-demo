@@ -11,6 +11,7 @@
     --text:#1a2230; --muted:#5f6b7d; --dim:#9aa4b2;
     --blue:#1479e6; --blue-soft:#eaf3fe; --blue-line:#cfe4fb;
     --green:#1a9d54; --green-soft:#eaf7ef;
+    --amber:#b7791f; --teal:#0e9aa7; --red:#e5484d;
   }
   body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; }
   code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
@@ -197,6 +198,32 @@
   .arch-cta{ text-align:center; margin-top:34px; }
   .arch-cta button{ font-family:inherit; background:var(--blue); color:#fff; border:0; border-radius:10px; padding:12px 22px; font-size:14px; font-weight:600; cursor:pointer; }
 
+  /* Anatomy of one run */
+  .section-note{ text-align:center; font-size:11.5px; color:var(--dim); margin-top:10px; max-width:680px; margin-left:auto; margin-right:auto; }
+  .logflow{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px; max-width:760px; margin:0 auto; }
+  .lf{ background:#f4f3ef; border:1px solid #e3e2db; border-radius:8px; padding:6px 12px; font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--text); }
+  .lf.k{ background:var(--blue-soft); border-color:var(--blue-line); color:var(--blue); font-weight:700; }
+  .lf-a{ color:var(--dim); font-weight:700; }
+  .toolbars{ max-width:660px; margin:20px auto 0; }
+  .tbrow{ display:flex; align-items:center; gap:11px; padding:5px 0; }
+  .tbname{ width:210px; font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--text); flex:0 0 auto; text-align:right; }
+  .tbbar{ flex:1; height:9px; background:var(--line); border-radius:5px; overflow:hidden; }
+  .tbbar i{ display:block; height:100%; border-radius:5px; }
+  .tbval{ width:58px; font-size:11.5px; font-weight:700; color:var(--muted); flex:0 0 auto; }
+  .why-callout{ max-width:700px; margin:24px auto 0; background:var(--blue-soft); border:1px solid var(--blue-line); border-radius:12px; padding:14px 18px; font-size:13px; color:#14418a; line-height:1.6; }
+  .why-callout b{ color:var(--blue); }
+
+  /* Raw log (deal view) */
+  .rawlog{ margin:12px 16px 4px; border-top:1px solid var(--line); }
+  .rawlog summary{ cursor:pointer; font-size:12px; font-weight:600; color:var(--blue); padding:11px 2px 8px; list-style:none; font-family:ui-monospace,Menlo,monospace; }
+  .rawlog summary::-webkit-details-marker{ display:none; }
+  .rawlog[open] summary{ color:var(--muted); }
+  .rlrow{ display:flex; gap:8px; font-family:ui-monospace,Menlo,monospace; font-size:10.5px; padding:3px 0; border-bottom:1px solid var(--line); line-height:1.4; }
+  .rlrow .rseq{ color:var(--dim); width:26px; flex:0 0 auto; text-align:right; }
+  .rlrow .rty{ flex:0 0 auto; width:74px; font-weight:700; }
+  .rty.reasoning{ color:var(--amber); } .rty.tool_call{ color:var(--blue); } .rty.tool_result{ color:var(--teal); } .rty.done{ color:var(--green); }
+  .rlrow .rtx{ color:var(--text); } .rlrow .rtx b{ color:var(--blue); }
+
   /* Thinking / typing */
   .thinking{ display:flex; align-items:center; gap:7px; padding:2px 0 0 22px; font-size:12px; color:var(--blue); font-weight:600; }
   .thinking .cur{ width:7px; height:13px; background:var(--blue); display:inline-block; border-radius:1px; animation:blink 1s steps(1) infinite; }
@@ -279,6 +306,27 @@
   </div>
   <div class="arch-sub" style="margin-top:22px">Agent chạy được vì đứng trên <b>dữ liệu hành vi khách tích luỹ</b> của Vucar — lợi thế khó sao chép. Càng nhiều deal, nó càng giỏi.</div>
 
+  <div class="section-lbl">Bên trong một lượt chạy — agent được tổ chức thế nào</div>
+  <div class="logflow">
+    <span class="lf k">reasoning</span><span class="lf-a">→</span>
+    <span class="lf">tool_start</span><span class="lf-a">→</span>
+    <span class="lf">tool_call</span><span class="lf-a">→</span>
+    <span class="lf">tool_result</span><span class="lf-a">→</span>
+    <span class="lf k">done</span>
+  </div>
+  <div class="section-note">Mỗi lượt: agent suy nghĩ → gọi tool → nhận kết quả, lặp lại. Trung bình <b>~15 lần gọi tool/lượt</b>, trên <b>100 loại tool</b>.</div>
+  <div class="toolbars">
+    <div class="tbrow"><span class="tbname">recall_skills</span><span class="tbbar"><i style="width:100%;background:#6b4ef0"></i></span><span class="tbval">174.5K</span></div>
+    <div class="tbrow"><span class="tbname">read_session_state</span><span class="tbbar"><i style="width:43%;background:#6b4ef0"></i></span><span class="tbval">74.6K</span></div>
+    <div class="tbrow"><span class="tbname">send_zalo_message</span><span class="tbbar"><i style="width:39%;background:#0e9aa7"></i></span><span class="tbval">68.0K</span></div>
+    <div class="tbrow"><span class="tbname">review_message</span><span class="tbbar"><i style="width:36%;background:#1a9d54"></i></span><span class="tbval">62.8K</span></div>
+    <div class="tbrow"><span class="tbname">schedule_followup</span><span class="tbbar"><i style="width:35%;background:#b7791f"></i></span><span class="tbval">61.6K</span></div>
+    <div class="tbrow"><span class="tbname">compute_unified_deal_signals</span><span class="tbbar"><i style="width:32%;background:#1479e6"></i></span><span class="tbval">56.0K</span></div>
+    <div class="tbrow"><span class="tbname">notify_pic</span><span class="tbbar"><i style="width:11%;background:#e5484d"></i></span><span class="tbval">19.3K</span></div>
+  </div>
+  <div class="why-callout">💡 <b>Vì sao nó chạy được:</b> tool được gọi nhiều nhất là <b>recall_skills</b> (174.5K lần) — mỗi lượt agent nạp lại kỹ năng đã học từ deal trước; cùng <b>compute_unified_deal_signals</b> đọc tín hiệu hành vi khách. Agent giỏi vì đứng trên <b>dữ liệu hành vi tích luỹ</b>, không phải prompt tĩnh.</div>
+  <div class="section-note">Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_logs</code> / <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_steps</code> (db=9) · 3,93M dòng log · 73.968 lượt chạy</div>
+
   <div class="arch-cta"><button data-v="deal">▶ Xem một deal thật</button></div>
 </div>
 
@@ -330,6 +378,7 @@
         <div class="procStep" id="procStep"></div>
       </div>
       <div class="feed" id="feed"></div>
+      <details class="rawlog"><summary>&lt;/&gt; Xem log gốc — agent_pipeline_logs (db=9)</summary><div id="rawlogBody"></div></details>
     </div>
   </section>
 </div>
@@ -361,6 +410,17 @@ const STAGES = [
       {sys:'Kiểm định hoàn tất', t:'KTV <b>Việt Phương</b> · 12/06 → INSPECTION_COMPLETED'}
     ],
     run:'run 8337068c · 10/06 10:32 · trigger=customer_replied',
+    rawlog:[
+      {s:0, ty:'reasoning', x:'Analyzing lead: 2021 Hyundai Santafe 2.5L HTRAC, 35k km, Hanoi. Stage/qualify undefined.'},
+      {s:5, ty:'tool_call', n:'fetch_lead_context', x:'{car_id: 1dd7716f…}'},
+      {s:7, ty:'tool_call', n:'compute_unified_deal_signals', x:'{car_id: 1dd7716f…}'},
+      {s:23, ty:'tool_call', n:'recall_skills', x:'{name: zalo-messaging}'},
+      {s:34, ty:'tool_call', n:'search_rag', x:'{query: "khách vừa kết bạn zalo, hỏi giá + xin ảnh"}'},
+      {s:40, ty:'tool_call', n:'review_message', x:'{draft: "Dạ em chào anh Hiếu…"}'},
+      {s:44, ty:'tool_call', n:'send_zalo_message', x:'{messages:[…]}'},
+      {s:51, ty:'tool_call', n:'schedule_followup', x:'{execute_at: 2026-06-11 09:00}'},
+      {s:60, ty:'done', x:'Đã chào + hỏi P1 + xin ảnh; định tính.'}
+    ],
     trace:[
       {t:'r', x:'Khách vừa kết bạn Zalo. Xe Santafe 2021, 35k km, Hà Nội — stage &amp; qualify đang UNDEFINED, chưa có giá kỳ vọng.'},
       {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state · read_lead_memory'},
@@ -389,6 +449,17 @@ const STAGES = [
       {wg:{type:'dealers', title:'Gửi mạng lưới dealer', badge:'14 dealer', rows:['Bảo Sơn Auto','Anh Cường xe Vin','A Giang Vĩnh Phúc','A Hướng'], resultLabel:'Bid cao nhất', result:'840 tr'}}
     ],
     run:'run aa66fa82 · 12/06 11:34 · request_dealer_bids',
+    rawlog:[
+      {s:0, ty:'reasoning', x:'Contextual analysis — customer sent 4 interior + registration photos.'},
+      {s:9, ty:'tool_call', n:'compute_unified_deal_signals', x:'{car_id: 1dd7716f…}'},
+      {s:36, ty:'tool_call', n:'check_inspection_status', x:'→ booking in-progress'},
+      {s:38, ty:'tool_call', n:'recall_skills', x:'{name: booking-inspection}'},
+      {s:44, ty:'tool_call', n:'request_dealer_bids', x:'{manual:false} → 14 dealers'},
+      {s:46, ty:'reasoning', x:'Photos confirmed; reaching out to 14 dealers.'},
+      {s:48, ty:'tool_call', n:'review_message', x:'{constraints: no price, no banned words}'},
+      {s:55, ty:'tool_call', n:'send_zalo_message', x:'"Dạ em nhận được ảnh… 16h30 KTV qua kiểm tra"'},
+      {s:68, ty:'done', x:'Request bid 14 dealer + xác nhận lịch kiểm định.'}
+    ],
     trace:[
       {t:'r', x:'Khách gửi đủ 4 ảnh nội thất + đăng kiểm → xe đủ điều kiện đẩy mạng lưới mua.'},
       {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state'},
@@ -424,6 +495,17 @@ const STAGES = [
       ], note:'Agent liên tục rút mẫu hình từ hội thoại thật (agent_insights). Mỗi mẫu qua <b>2 cửa duyệt người</b> + kiểm chứng bằng deal thắng trước khi thành kỹ năng — không tự tin dùng khi chưa xác nhận.'}}
     ],
     run:'run a6fc0282 · 12/06 10:34 · trigger=customer_replied',
+    rawlog:[
+      {s:0, ty:'reasoning', x:'Customer: changed Michelin tyres, upgraded lights (kept OEM), dealer-maintained, cut 5M.'},
+      {s:13, ty:'tool_call', n:'compute_unified_deal_signals', x:'{car_id: 1dd7716f…}'},
+      {s:21, ty:'tool_result', n:'compute_unified_deal_signals', x:'{win_prob:0.547, P1:920M, P2:840M, M1 dealer 891–912M}'},
+      {s:27, ty:'tool_call', n:'recall_skills', x:'{name: price-negotiation}'},
+      {s:35, ty:'reasoning', x:'915M near feasibility ceiling ~911.7M → CLOSABLE_NEGOTIATE; 0 real bids yet.'},
+      {s:44, ty:'tool_call', n:'review_message', x:'{draft: "…em ghi nhận 915 triệu…"}'},
+      {s:46, ty:'tool_result', n:'review_message', x:'{decision: APPROVED}'},
+      {s:53, ty:'tool_call', n:'send_zalo_message', x:'"…ghi nhận 915tr…" + link kiểm định'},
+      {s:64, ty:'done', x:'Sau kiểm định chốt 889tr.'}
+    ],
     trace:[
       {t:'r', x:'Khách “thay lốp Michelin, độ đèn giữ zin, bảo dưỡng hãng, bớt 5tr còn 915tr”.'},
       {t:'ctx', x:'compute_unified_deal_signals · fetch_lead_context · read_session_state · read_lead_memory'},
@@ -539,11 +621,18 @@ function renderFeed(){
   };
   setTimeout(step, 320);
 }
+function renderRawlog(){
+  const rows = STAGES[cur].rawlog || [];
+  $('rawlogBody').innerHTML = rows.map(r=>
+    `<div class="rlrow"><span class="rseq">${r.s}</span><span class="rty ${r.ty}">${r.ty}</span>`+
+    `<span class="rtx">${r.n?`<b>${r.n}</b> `:''}${r.x}</span></div>`
+  ).join('');
+}
 function render(){
   renderSteps();
   $('stageTitle').textContent = STAGES[cur].title;
   $('stageDesc').innerHTML = STAGES[cur].desc;
-  renderCard(); renderChat(); renderFeed();
+  renderCard(); renderChat(); renderFeed(); renderRawlog();
 }
 document.addEventListener('keydown', e=>{
   if(document.getElementById('viewDeal').classList.contains('active')){
