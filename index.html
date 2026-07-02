@@ -201,6 +201,27 @@
   .thinking{ display:flex; align-items:center; gap:7px; padding:2px 0 0 22px; font-size:12px; color:var(--blue); font-weight:600; }
   .thinking .cur{ width:7px; height:13px; background:var(--blue); display:inline-block; border-radius:1px; animation:blink 1s steps(1) infinite; }
   @keyframes blink{ 50%{ opacity:0 } }
+
+  /* Deal-view live harness (right column) */
+  .mh{ display:grid; grid-template-columns:1fr 22px 1.15fr 22px 1fr; grid-template-rows:auto 15px auto 15px auto; align-items:center; justify-items:center; margin-bottom:12px; }
+  .mnode{ width:100%; background:#f4f3ef; border:1px solid #e3e2db; border-radius:10px; padding:7px 4px; text-align:center; transition:.22s; }
+  .mnode .mn-i{ font-size:15px; line-height:1; }
+  .mnode .mn-h{ font-size:9.5px; font-weight:700; margin-top:3px; color:var(--text); }
+  .mnode.center{ background:#fff; border-color:var(--blue); }
+  .mnode.lit{ background:#fff; }
+  .mnode.firing{ border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-soft); transform:scale(1.06); background:#fff; }
+  .mconn{ color:#c3ccd8; font-size:12px; }
+  .mg-tools{ grid-area:1/3 } .mg-va1{ grid-area:2/3 } .mg-session{ grid-area:3/1 } .mg-ha1{ grid-area:3/2 } .mg-harness{ grid-area:3/3 } .mg-ha2{ grid-area:3/4 } .mg-sandbox{ grid-area:3/5 } .mg-va2{ grid-area:4/3 } .mg-orch{ grid-area:5/3 }
+  @media(max-width:520px){ .mh{ grid-template-columns:1fr; grid-template-rows:none; } .mconn{ display:none; } .mg-tools,.mg-va1,.mg-session,.mg-ha1,.mg-harness,.mg-ha2,.mg-sandbox,.mg-va2,.mg-orch{ grid-area:auto; } }
+  .procStep{ font-size:12px; font-weight:600; color:var(--muted); background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:8px 11px; margin-bottom:12px; }
+  .procStep .cur{ width:7px; height:12px; background:var(--blue); display:inline-block; border-radius:1px; animation:blink 1s steps(1) infinite; vertical-align:middle; margin-right:5px; }
+  .pl-item{ display:flex; gap:9px; padding:7px 0; border-bottom:1px solid var(--line); }
+  .pl-item:last-child{ border-bottom:none; }
+  .pl-dot{ width:8px; height:8px; border-radius:50%; margin-top:5px; flex:0 0 auto; }
+  .pl-node{ font-size:10px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; }
+  .pl-tx{ font-size:12.5px; color:var(--text); margin-top:2px; }
+  .pl-tx b{ font-family:ui-monospace,Menlo,monospace; color:var(--blue); font-weight:700; }
+  .pl-tx code{ font-family:ui-monospace,Menlo,monospace; font-size:11.5px; color:var(--blue); background:var(--blue-soft); border-radius:4px; padding:0 5px; }
 </style>
 </head>
 <body>
@@ -287,12 +308,26 @@
 
   <!-- SECTION 2: behind-the-scenes -->
   <section>
-    <div class="col-h">Hậu trường — Harness Architecture</div>
+    <div class="col-h">Hậu trường — agent xử lý thế nào để ra output</div>
     <div class="rp">
       <div class="rp-h">
-        <div class="t">AI Reasoning · Chain of Thoughts</div>
-        <div class="s">Orchestrator (Claude) tự suy nghĩ &amp; gọi tool — trace thật từ harness</div>
+        <div class="t">Harness đang chạy</div>
+        <div class="s">Orchestrator (Claude) đi qua từng thành phần — trace thật của lead này</div>
         <div class="run" id="runMeta"></div>
+      </div>
+      <div style="padding:14px 16px 0">
+        <div class="mh" id="miniHarness">
+          <div class="mnode mg-tools" data-k="tools"><div class="mn-i">🧰</div><div class="mn-h">Tools + MCP</div></div>
+          <div class="mconn mg-va1">⇅</div>
+          <div class="mnode mg-session" data-k="session"><div class="mn-i">🗂️</div><div class="mn-h">Bộ nhớ &amp; Kỹ năng</div></div>
+          <div class="mconn mg-ha1">⇄</div>
+          <div class="mnode center mg-harness" data-k="harness"><div class="mn-i">✳️</div><div class="mn-h">Harness</div></div>
+          <div class="mconn mg-ha2">⇄</div>
+          <div class="mnode mg-sandbox" data-k="sandbox"><div class="mn-i">🛡️</div><div class="mn-h">Guardrail</div></div>
+          <div class="mconn mg-va2">⇅</div>
+          <div class="mnode mg-orch" data-k="orch"><div class="mn-i">🔀</div><div class="mn-h">Orchestration</div></div>
+        </div>
+        <div class="procStep" id="procStep"></div>
       </div>
       <div class="feed" id="feed"></div>
     </div>
@@ -452,34 +487,57 @@ function renderChat(){
   }).join('');
   $('chat').scrollTop = 0;
 }
-let feedGen = 0;
-function tiHTML(it){
-  let tx = it.t==='tool' ? `<span class="tn">${it.n}</span> — ${it.x}` : it.x;
-  return `<span class="dot"></span><div class="lab">${LAB[it.t]||''}</div><div class="tx">${tx}</div>`;
+const NMAP = {
+  harness:{lbl:'Harness', c:'#1479e6'},
+  session:{lbl:'Bộ nhớ & Kỹ năng', c:'#6b4ef0'},
+  tools:{lbl:'Tools + MCP', c:'#0e9aa7'},
+  sandbox:{lbl:'Guardrail', c:'#1a9d54'},
+  orch:{lbl:'Orchestration', c:'#b7791f'}
+};
+function nodeOf(it){
+  if(it.t==='skill' || it.t==='rag') return 'session';
+  if(it.t==='ctx') return 'harness';
+  if(it.t==='sig' || it.t==='r') return 'harness';
+  if(it.t==='guard') return 'sandbox';
+  if(it.t==='done') return 'orch';
+  if(it.t==='act') return 'tools';
+  if(it.t==='tool') return it.n==='schedule_followup' ? 'orch' : 'tools';
+  return 'harness';
 }
+let feedGen = 0;
 function renderFeed(){
   const st = STAGES[cur];
   $('runMeta').textContent = '▶ '+st.run;
-  const feed = $('feed');
-  const gen = ++feedGen;               // cancels any in-flight reveal
-  feed.innerHTML = '<div class="thinking">Agent đang suy nghĩ<span class="cur"></span></div>';
-  const think = feed.firstChild;
+  const mh = $('miniHarness'), log = $('feed'), ps = $('procStep');
+  const gen = ++feedGen;
+  mh.querySelectorAll('.mnode').forEach(n=> n.classList.remove('lit','firing'));
+  log.innerHTML = '';
+  ps.innerHTML = '<span class="cur"></span>Agent bắt đầu xử lý lượt này…';
   const items = st.trace;
   let i = 0;
   const step = ()=>{
-    if(gen !== feedGen) return;         // a newer render started → stop
-    if(i >= items.length){ if(think) think.remove(); return; }
+    if(gen !== feedGen) return;
+    if(i >= items.length){
+      mh.querySelectorAll('.firing').forEach(n=> n.classList.remove('firing'));
+      ps.innerHTML = '✓ Output đã tạo — gửi cho khách';
+      return;
+    }
     const it = items[i++];
+    const k = nodeOf(it); const nm = NMAP[k];
+    mh.querySelectorAll('.firing').forEach(n=> n.classList.remove('firing'));
+    const node = mh.querySelector('.mnode[data-k="'+k+'"]');
+    if(node){ node.classList.add('lit','firing'); }
+    ps.innerHTML = `<span class="cur"></span><b style="color:${nm.c}">${nm.lbl}</b> · ${LAB[it.t]||''}`;
+    const tx = it.t==='tool' ? `<b>${it.n}</b> — ${it.x}` : it.x;
     const el = document.createElement('div');
-    el.className = 'ti '+it.t;
-    el.style.animation = 'pop .28s ease both';
-    el.innerHTML = tiHTML(it);
-    feed.insertBefore(el, think);
-    feed.scrollTop = feed.scrollHeight;
-    const delay = it.t==='r' ? 620 : (it.t==='guard'||it.t==='done' ? 560 : 340);
+    el.className = 'pl-item'; el.style.animation = 'pop .28s ease both';
+    el.innerHTML = `<span class="pl-dot" style="background:${nm.c}"></span>`+
+      `<div><div class="pl-node" style="color:${nm.c}">${nm.lbl} · ${LAB[it.t]||''}</div><div class="pl-tx">${tx}</div></div>`;
+    log.appendChild(el); log.scrollTop = log.scrollHeight;
+    const delay = it.t==='r' ? 640 : (it.t==='guard'||it.t==='done' ? 560 : 380);
     setTimeout(step, delay);
   };
-  setTimeout(step, 260);
+  setTimeout(step, 320);
 }
 function render(){
   renderSteps();
