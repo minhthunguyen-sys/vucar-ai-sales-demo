@@ -34,7 +34,7 @@
   @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.4} }
 
   /* Layout: 2 vertical sections */
-  .wrap{ max-width:1360px; margin:0 auto; padding:22px; display:grid; grid-template-columns:1.3fr 1fr; gap:22px; align-items:start; }
+  .wrap{ max-width:1360px; margin:0 auto; padding:22px; display:grid; grid-template-columns:1.85fr 1fr; gap:22px; align-items:start; }
   @media(max-width:1000px){ .wrap{ grid-template-columns:1fr; } }
   .col-h{ font-size:12px; font-weight:700; letter-spacing:.4px; color:var(--dim); text-transform:uppercase; margin:0 2px 12px; }
 
@@ -73,7 +73,8 @@
   .chat-top .who{ font-size:14px; font-weight:600; }
   .chat-top .who small{ display:block; color:var(--muted); font-weight:400; font-size:12px; }
   .chat-top .zalo{ margin-left:auto; color:var(--dim); font-size:11px; font-weight:700; letter-spacing:.5px; }
-  .chat{ padding:16px 15px; height:430px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; background:var(--bg); scroll-behavior:smooth; }
+  .chat{ padding:18px 18px; height:540px; overflow-y:auto; display:flex; flex-direction:column; gap:11px; background:var(--bg); scroll-behavior:smooth; }
+  .bubble{ font-size:14px; }
   .chat::-webkit-scrollbar{ width:6px; } .chat::-webkit-scrollbar-thumb{ background:#d7dde5; border-radius:4px; }
   .day{ text-align:center; font-size:11px; color:var(--dim); margin:2px 0; }
   .line{ display:flex; gap:8px; align-items:flex-end; animation:pop .25s ease; }
@@ -527,13 +528,13 @@ const STAGES = [
       {day:'10/06/2026'},
       {s:'ai', t:'Dạ em là nhân viên từ Vucar. Em liên hệ để hỗ trợ mình bán xe ạ.', m:'10:29', think:[
         {k:'harness', lab:'Nạp bối cảnh', x:'<code>compute_unified_deal_signals</code> · <code>fetch_lead_context</code> · <code>read_session_state</code>'},
-        {k:'harness', lab:'Nhận diện nhóm khách', x:'Tín hiệu (chủ động, hỏi quy trình) → phân loại <b>Người bán có kế hoạch</b>', hi:true, why:'Newbie chào giống nhau cho mọi khách. Agent phân nhóm ngay từ đầu để chọn đúng cách tiếp cận.'},
+        {k:'harness', lab:'Nhận diện nhóm khách', x:'Tín hiệu (chủ động, hỏi quy trình) → phân loại <b>Người bán có kế hoạch</b>', hi:true, why:'Agent nhận ra kiểu khách để chọn cách nói chuyện phù hợp, thay vì chào chung chung.'},
         {k:'session', lab:'Recall kỹ năng', x:'<code>recall_skills</code> → zalo-messaging · signal-reading'},
         {k:'tools', lab:'Gửi khách', x:'<code>send_zalo_message</code> — lời chào', ch:'khach'}
       ]},
       {s:'cust', t:'[Đồng ý kết bạn — “Santafe 2021”]', m:'10:30', photo:true},
       {s:'ai', t:'Em hỗ trợ bán Hyundai Santafe 2.5L HTRAC 2021 ạ. Em đang có 2–3 người mua sẵn quan tâm dòng này.', m:'10:37', think:[
-        {k:'session', lab:'RAG · học từ PIC', x:'<code>search_rag</code>: “khách kết bạn, hỏi giá + xin ảnh santafe 2021”', hi:true, why:'Agent tra cách các sale giỏi từng xử lý ca tương tự — kinh nghiệm tập thể mà newbie chưa có.'},
+        {k:'session', lab:'RAG · học từ PIC', x:'<code>search_rag</code>: “khách kết bạn, hỏi giá + xin ảnh santafe 2021”', hi:true, why:'Agent học theo cách các bạn sale giỏi từng xử lý ca tương tự.'},
         {k:'harness', lab:'Lập kế hoạch', x:'<code>write_todos</code>: chào · xin ảnh · lên lịch nhắc'},
         {k:'sandbox', lab:'Guardrail', x:'<code>review_message</code> → <b>APPROVED</b>'},
         {k:'tools', lab:'Gửi khách', x:'<code>send_zalo_message</code>', ch:'khach'}
@@ -545,7 +546,7 @@ const STAGES = [
       {day:'12/06/2026'},
       {s:'ai', wg:{type:'booking', date:'12/06 · Thứ 5', slots:[{t:'15:30'},{t:'16:00'},{t:'16:30',sel:true},{t:'17:00'},{t:'17:30'}], btn:'✓ Đã xác nhận · KTV Việt Phương'}, think:[
         {k:'harness', lab:'Điều kiện đặt lịch', x:'Đủ thông tin xe + khu vực Hà Nội → mở lịch kiểm định tận nơi'},
-        {k:'tools', lab:'Đa kênh · Kiểm định', x:'<code>book_inspection</code> → hệ thống kiểm định · phân công KTV Việt Phương', ch:'kd', hi:true, why:'Agent không chỉ chat — nó tự đặt lịch qua hệ thống kiểm định & phân công kỹ thuật viên, hành động xuyên hệ thống.'}
+        {k:'tools', lab:'Đa kênh · Kiểm định', x:'<code>book_inspection</code> → hệ thống kiểm định · phân công KTV Việt Phương', ch:'kd', hi:true, why:'Agent tự đặt lịch và cử kỹ thuật viên tới tận nơi, không chỉ nhắn tin.'}
       ]},
       {sys:'Kiểm định hoàn tất', t:'KTV <b>Việt Phương</b> · 12/06 → INSPECTION_COMPLETED'}
     ]
@@ -575,15 +576,15 @@ const STAGES = [
       {s:'cust', t:'Xe a đi ít lắm, thay dàn lốp Michelin, đèn pha nâng cấp giữ bộ zin, bảo dưỡng toàn trong hãng.', m:'10:32', sig:'PROACTIVE_INFO · chủ động nêu điểm cộng → nâng giá trị'},
       {s:'cust', t:'[Gửi 4 ảnh nội thất + đăng kiểm] Đây e nhé', m:'11:32', photo:true},
       {s:'ai', t:'Dạ em nhận được ảnh, xe anh giữ gìn cẩn thận và lên đồ xịn quá ạ. Em ghi nhận mức giá anh bớt lộc còn <b>915 triệu</b> nha.', m:'10:36', think:[
-        {k:'tools', lab:'Đọc ảnh · OCR', x:'<code>read_image</code>: <b>đăng kiểm + đăng ký</b> → biển số, số khung/máy, đời <b>2021</b>', hi:true, why:'Newbie phải tự soi giấy tờ, dễ nhầm đời/biến thể. Agent OCR đọc chính xác đời & thông số từ đăng kiểm.'},
-        {k:'harness', lab:'Phân loại xe', x:'<code>lookup_car_catalog</code> → xác nhận đúng bản <b>Cao cấp 2.5L HTRAC</b> (không nhầm bản Tiêu chuẩn)', hi:true, why:'Đúng biến thể mới định đúng giá. Agent tra catalog phân loại chuẩn phiên bản.'},
+        {k:'tools', lab:'Đọc ảnh · OCR', x:'<code>read_image</code>: <b>đăng kiểm + đăng ký</b> → biển số, số khung/máy, đời <b>2021</b>', hi:true, why:'Agent tự đọc ảnh giấy đăng kiểm để lấy đúng đời xe và thông số — không phải soi tay, không sợ nhầm.'},
+        {k:'harness', lab:'Phân loại xe', x:'<code>lookup_car_catalog</code> → xác nhận đúng bản <b>Cao cấp 2.5L HTRAC</b> (không nhầm bản Tiêu chuẩn)', hi:true, why:'Xác định đúng phiên bản xe thì mới định đúng giá.'},
         {k:'harness', lab:'Xác nhận thông số', x:'<code>update_car_info</code>: đời 2021 · 35.000 km · chính chủ 1 đời'},
         {k:'tools', lab:'Gửi khách', x:'<code>send_zalo_message</code>', ch:'khach'}
       ]},
       {s:'ai', wg:{type:'dealers', title:'Gửi mạng lưới dealer', badge:'14 dealer', rows:['Bảo Sơn Auto','Anh Cường xe Vin','A Giang Vĩnh Phúc','A Hướng'], resultLabel:'Bid cao nhất', result:'840 tr'}, think:[
-        {k:'harness', lab:'Phân tích giá', x:'<code>get_price_analysis</code> · <code>predict_price_vap</code> (VAP mua vào) · <code>get_market_listings</code> (N=19 comps)', hi:true, why:'Agent định giá bằng dữ liệu thị trường + VAP, không đoán cảm tính. Sai giá là mất khách hoặc lỗ.'},
-        {k:'harness', lab:'Khoảng giá thị trường', x:'Dealer <b>891–912tr</b> · Retail 945–970tr (TIME_DECAY) · win_prob <b>0.547</b> · threshold zone E'},
-        {k:'tools', lab:'Đa kênh · Dealer', x:'<code>request_dealer_bids</code> → <b>14 dealer</b> · <code>send_signal_to_dealer_agent</code> (agent dealer riêng)', ch:'dealer', hi:true, why:'Agent tự rao xe ra mạng lưới dealer & bắt tay với một agent phía dealer — đa kênh, không chỉ nói với khách.'},
+        {k:'harness', lab:'Phân tích giá', x:'<code>get_price_analysis</code> · <code>predict_price_vap</code> · <code>get_market_listings</code> — so 19 xe tương tự', hi:true, why:'Agent định giá dựa trên dữ liệu thị trường thật, không đoán cảm tính.'},
+        {k:'harness', lab:'Khoảng giá thị trường', x:'Người mua trả <b>891–912tr</b> · Giá bán lẻ 945–970tr · khả năng chốt ~55%'},
+        {k:'tools', lab:'Đa kênh · Dealer', x:'<code>request_dealer_bids</code> → <b>14 dealer</b> · <code>send_signal_to_dealer_agent</code> (agent dealer riêng)', ch:'dealer', hi:true, why:'Agent tự gửi xe cho mạng lưới người mua để săn giá tốt nhất.'},
         {k:'orch', lab:'Kết quả', x:'Bid cao nhất về: <b>840tr</b> — làm cơ sở thương lượng'}
       ]}
     ]
@@ -617,13 +618,13 @@ const STAGES = [
       {s:'cust', t:'A có bớt 1 chút để ra lộc cho khách mà e.', m:'10:16', sig:'PRICE_FLEXIBLE · sẵn sàng giảm nhẹ'},
       {s:'cust', t:'Thế bên e thu phí là bao nhiêu?', m:'10:27', sig:'SERVICE_FEE_INQUIRY · tín hiệu mua mạnh'},
       {s:'ai', t:'Dạ bên em chỉ thu phí <b>sau khi giao dịch thành công</b>, mức phí tùy giá bán thực tế ạ. Anh cứ yên tâm để em kết nối bên mua trước nhé.', m:'10:30', think:[
-        {k:'session', lab:'Đọc ý định', x:'customer-behavior: hỏi phí <b>sau khi</b> đã hẹn KĐ = tín hiệu mua, không phải phản đối', hi:true, why:'Sale non tay dễ hiểu nhầm "hỏi phí" là chê đắt. Agent đọc đúng đây là buying signal → trả lời trấn an ngay.'},
+        {k:'session', lab:'Đọc ý định', x:'customer-behavior: hỏi phí <b>sau khi</b> đã hẹn KĐ = tín hiệu mua, không phải phản đối', hi:true, why:'Khách hỏi phí sau khi đã hẹn xem xe thường là sắp mua — agent hiểu đúng nên trấn an ngay.'},
         {k:'sandbox', lab:'Guardrail', x:'<code>review_message</code> → APPROVED (không cam kết sai)'},
         {k:'tools', lab:'Gửi khách', x:'<code>send_zalo_message</code>', ch:'khach'}
       ]},
       {s:'ai', t:'Dạ xe anh lên đồ xịn quá ạ. Em ghi nhận mức giá anh bớt lộc còn <b>915 triệu</b> nha.', m:'10:36', think:[
-        {k:'harness', lab:'Kiểm tra feasibility giá', x:'915tr sát trần khả thi ~<b>911.7tr</b> (P75 dealer) → trạng thái <b>CLOSABLE_NEGOTIATE</b>', hi:true, why:'Agent biết đâu là trần thị trường để không hứa quá. Newbie dễ chốt đại rồi vỡ, hoặc mất khách.'},
-        {k:'harness', lab:'Kỷ luật giá', x:'0 bid thật &gt; 840tr → “ghi nhận giá” KHÔNG phải cam kết mua (không VO)', hi:true, why:'Agent không cam kết con số của Vucar khi chưa có bid thật — kỷ luật giá mà sale non tay hay vi phạm.'},
+        {k:'harness', lab:'Kiểm tra feasibility giá', x:'915tr đã sát mức cao nhất thị trường (~912tr) — vẫn còn thương lượng được', hi:true, why:'Agent biết mức giá cao nhất thị trường chấp nhận, nên không hứa quá tay.'},
+        {k:'harness', lab:'Kỷ luật giá', x:'Chưa có người mua nào trả trên 840tr → chỉ ghi nhận, chưa hứa mua giá đó', hi:true, why:'Agent chỉ ghi nhận giá khách nói, chưa hứa mua khi chưa có giá thật từ người mua.'},
         {k:'sandbox', lab:'Guardrail', x:'<code>review_message</code> → <b>APPROVED</b>'},
         {k:'tools', lab:'Gửi khách', x:'<code>send_zalo_message</code>', ch:'khach'}
       ]},
@@ -738,8 +739,8 @@ function thinkStep(turn){
   const nm = NMAP[st.k]||{lbl:'',c:'#1479e6'};
   $('procStep').innerHTML=`<span class="cur"></span>Agent đang xử lý — <b style="color:${nm.c}">${nm.lbl}</b>`;
   const el=document.createElement('div'); el.className='si'+(st.hi?' hi':'');
-  el.innerHTML=`<span class="sdot"></span><div class="sb"><div class="slab">${st.lab||nm.lbl}${st.hi?' <span class="star">★ CHUYÊN SÂU</span>':''}</div>`+
-    `<div class="stx">${st.x}</div>${st.ch?`<span class="sch ${st.ch}">${CH[st.ch]}</span>`:''}${st.why?`<div class="swhy"><b>Vì sao khó:</b> ${st.why}</div>`:''}</div>`;
+  el.innerHTML=`<span class="sdot"></span><div class="sb"><div class="slab">${st.lab||nm.lbl}</div>`+
+    `<div class="stx">${st.x}</div>${st.ch?`<span class="sch ${st.ch}">${CH[st.ch]}</span>`:''}${st.why?`<div class="swhy">${st.why}</div>`:''}</div>`;
   $('feed').appendChild(el); $('feed').scrollTop=$('feed').scrollHeight;
   schedule(()=>thinkStep(turn), st.hi?1550:(st.k==='tools'||st.k==='orch'?760:960));
 }
