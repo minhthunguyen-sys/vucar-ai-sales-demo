@@ -240,6 +240,21 @@
   .ometric .om-n{ font-size:19px; font-weight:800; color:var(--text); }
   .ometric .om-l{ font-size:12px; color:var(--muted); margin-top:1px; }
 
+  /* Behavior library (arch view) */
+  .behav-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:940px; margin:0 auto; }
+  @media(max-width:820px){ .behav-grid{ grid-template-columns:repeat(2,1fr); } }
+  .bcard{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 12px; text-align:center; }
+  .bcard.on{ border-color:#6b4ef0; box-shadow:0 0 0 2px #f1eeff; }
+  .bcard .bi{ font-size:22px; line-height:1; }
+  .bcard .bn{ font-size:13px; font-weight:700; margin-top:7px; }
+  .bcard .bapp{ font-size:12px; color:#6b4ef0; font-weight:700; margin-top:4px; }
+  .bcard .bw{ font-size:10.5px; color:var(--dim); background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:1px 8px; display:inline-block; margin-top:5px; }
+  .bcard .bhere{ display:inline-block; margin-top:5px; font-size:10px; font-weight:700; color:#6b4ef0; background:#f1eeff; border-radius:20px; padding:1px 8px; }
+
+  /* Behavior signal chip (deal chat) — Idea C */
+  .sigchip{ align-self:flex-start; margin:-3px 0 2px 36px; font-size:10.5px; font-weight:600; color:#6b4ef0; background:#f1eeff; border:1px solid #ddd4ff; border-radius:20px; padding:2px 10px; animation:pop .3s ease; }
+  .arche{ font-size:10.5px; font-weight:700; color:#6b4ef0; background:#f1eeff; border:1px solid #ddd4ff; border-radius:20px; padding:2px 9px; margin-left:8px; white-space:nowrap; }
+
   /* Raw log (deal view) */
   .rawlog{ margin:12px 16px 4px; border-top:1px solid var(--line); }
   .rawlog summary{ cursor:pointer; font-size:12px; font-weight:600; color:var(--blue); padding:11px 2px 8px; list-style:none; font-family:ui-monospace,Menlo,monospace; }
@@ -334,6 +349,20 @@
   </div>
   <div class="arch-sub" style="margin-top:22px">Agent chạy được vì đứng trên <b>dữ liệu hành vi khách tích luỹ</b> của Vucar — lợi thế khó sao chép. Càng nhiều deal, nó càng giỏi.</div>
 
+  <div class="section-lbl">Thư viện hành vi khách — dữ liệu tích luỹ</div>
+  <div class="arch-sub">Agent không đối xử mọi khách như nhau. Từ 1M+ hội thoại, nó đã học nhiều <b>nhóm hành vi người bán</b> và cách xử lý riêng cho từng nhóm — áp dụng hàng chục nghìn lần.</div>
+  <div class="behav-grid" style="margin-top:16px">
+    <div class="bcard"><div class="bi">🐢</div><div class="bn">Người bán thụ động</div><div class="bapp">2.310 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">🏃</div><div class="bn">Người bán gấp</div><div class="bapp">1.229 lần áp dụng</div></div>
+    <div class="bcard on"><div class="bi">📋</div><div class="bn">Người bán có kế hoạch</div><div class="bapp">1.096 lần áp dụng</div><div class="bhere">= anh Hiếu (deal demo)</div></div>
+    <div class="bcard"><div class="bi">💭</div><div class="bn">Chưa biết giá xe</div><div class="bw">đang học</div></div>
+    <div class="bcard"><div class="bi">👻</div><div class="bn">Re-engage sau ghost</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">🏔️</div><div class="bn">Người bán tỉnh xa</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">💰</div><div class="bn">Kỳ vọng giá cao</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">🔄</div><div class="bn">Trade-in (đổi xe)</div><div class="bw">đang theo dõi</div></div>
+  </div>
+  <div class="section-note">Mỗi nhóm có pattern xử lý riêng, rút từ deal thật. Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_insights.customer_type</code> (db=9).</div>
+
   <div class="section-lbl">Bên trong một lượt chạy — agent được tổ chức thế nào</div>
   <div class="logflow">
     <span class="lf k">reasoning</span><span class="lf-a">→</span>
@@ -409,7 +438,7 @@
     </div>
     <div class="lead">
       <span class="ava cust lg" data-init="H"><img src="assets/customer.jpg" onerror="this.remove()"></span>
-      <div class="who">Anh Hiếu<small>Hyundai Santafe 2.5L HTRAC 2021 · Hà Nội · 035****888</small></div>
+      <div class="who">Anh Hiếu <span class="arche">📋 Người bán có kế hoạch</span><small>Hyundai Santafe 2.5L HTRAC 2021 · Hà Nội · 035****888</small></div>
       <div class="price"><div class="k">Giá đề xuất bởi Vucar</div><div class="v">889.000.000 ₫</div></div>
     </div>
     <div class="acard" id="acard"></div>
@@ -513,7 +542,7 @@ const STAGES = [
     ]},
     chat:[
       {day:'12/06/2026'},
-      {s:'cust', t:'Xe a đi ít lắm, thay dàn lốp Michelin, đèn pha nâng cấp giữ bộ zin, bảo dưỡng toàn trong hãng.', m:'10:32'},
+      {s:'cust', t:'Xe a đi ít lắm, thay dàn lốp Michelin, đèn pha nâng cấp giữ bộ zin, bảo dưỡng toàn trong hãng.', m:'10:32', sig:'PROACTIVE_INFO · chủ động nêu điểm cộng → nâng giá trị'},
       {s:'ai', t:'Dạ xe anh giữ gìn cẩn thận và lên đồ xịn quá ạ. Em ghi nhận mức giá anh bớt lộc còn <b>915 triệu</b> nha.', m:'10:36'},
       {s:'cust', t:'[Gửi 4 ảnh nội thất + đăng kiểm] Đây e nhé', m:'11:32', photo:true},
       {wg:{type:'dealers', title:'Gửi mạng lưới dealer', badge:'14 dealer', rows:['Bảo Sơn Auto','Anh Cường xe Vin','A Giang Vĩnh Phúc','A Hướng'], resultLabel:'Bid cao nhất', result:'840 tr'}}
@@ -553,11 +582,11 @@ const STAGES = [
     chat:[
       {day:'12/06/2026'},
       {s:'ai', t:'Xe mình kỳ vọng 920tr, anh có thể bớt thêm chút để dễ chốt không ạ?', m:'09:31'},
-      {s:'cust', t:'A có bớt 1 chút để ra lộc cho khách mà e.', m:'10:16'},
-      {s:'cust', t:'Thế bên e thu phí là bao nhiêu?', m:'10:27'},
+      {s:'cust', t:'A có bớt 1 chút để ra lộc cho khách mà e.', m:'10:16', sig:'PRICE_FLEXIBLE · sẵn sàng giảm nhẹ'},
+      {s:'cust', t:'Thế bên e thu phí là bao nhiêu?', m:'10:27', sig:'SERVICE_FEE_INQUIRY · tín hiệu mua mạnh'},
       {s:'ai', t:'Dạ bên em chỉ thu phí <b>sau khi giao dịch thành công</b>, mức phí tùy giá bán thực tế ạ. Anh cứ yên tâm để em kết nối bên mua trước nhé.', m:'10:30'},
       {day:'13/06/2026'},
-      {s:'cust', t:'E bảo người ta <b>890tr</b>, a còn phải trả phí bên e nữa… a cũng lắng nghe tư vấn của e đấy.', m:'14:17'},
+      {s:'cust', t:'E bảo người ta <b>890tr</b>, a còn phải trả phí bên e nữa… a cũng lắng nghe tư vấn của e đấy.', m:'14:17', sig:'SOFT_CLOSE · đồng thuận, chốt gần'},
       {wg:{type:'deposit', title:'Chốt & đặt cọc', lines:[{k:'Kỳ vọng khách', v:'915 tr'},{k:'Bid dealer cao nhất', v:'840 tr'},{k:'Giá chốt', v:'889 tr', big:true}], btn:'✓ COMPLETED · DEPOSIT_PAID'}},
       {wg:{type:'learning', insights:[
         {text:'Khách hỏi “bên em thu phí thế nào?” <b>sau khi</b> đã hẹn kiểm định = tín hiệu mua mạnh → trả lời ngay: người bán <b>miễn phí 100%</b>.', tag:'khớp đúng tin 10:27 của deal này'},
@@ -635,7 +664,8 @@ function renderChat(){
     const meta = c.m?`<div class="meta">${c.m}</div>`:'';
     const bub = `<div class="bubble ${c.photo?'photo':''}">${c.t.replace(/\n/g,'<br>')}${meta}</div>`;
     if(c.s==='ai') return `<div class="line ai" style="animation-delay:${idx*0.03}s">${bub}${avaAgent}</div>`;
-    return `<div class="line cust" style="animation-delay:${idx*0.03}s">${avaCust}${bub}</div>`;
+    const line = `<div class="line cust" style="animation-delay:${idx*0.03}s">${avaCust}${bub}</div>`;
+    return line + (c.sig ? `<div class="sigchip">🎯 ${c.sig}</div>` : '');
   }).join('');
   $('chat').scrollTop = 0;
 }
