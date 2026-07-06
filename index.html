@@ -163,8 +163,9 @@
   #viewDeal{ display:grid; order:1; }
   #viewArch{ order:2; }
   #viewOps{ order:3; }
+  #viewTrust{ order:4; }
   .topbar{ order:0; } .foot{ order:9; }
-  #viewArch, #viewOps{ border-top:1px solid var(--border); padding-top:60px; padding-bottom:64px; }
+  #viewArch, #viewOps, #viewTrust{ border-top:1px solid var(--border); padding-top:60px; padding-bottom:64px; }
   .navlink{ font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; padding:6px 12px; border-radius:8px; }
   .navlink:hover{ color:var(--blue); background:var(--blue-soft); }
   .eyebrow{ text-align:center; font-size:12px; font-weight:700; letter-spacing:2.2px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
@@ -251,6 +252,29 @@
   .ometric:last-child{ border-bottom:none; }
   .ometric .om-n{ font-size:19px; font-weight:800; color:var(--text); }
   .ometric .om-l{ font-size:12px; color:var(--muted); margin-top:1px; }
+  /* Trust section */
+  .demo-fb{ max-width:720px; margin:0 auto; background:var(--blue-soft); border:1px solid var(--blue-line); border-radius:14px; padding:18px 20px; }
+  .demo-fb .dfh{ font-size:13px; font-weight:700; color:#14418a; margin-bottom:8px; }
+  .demo-fb .dfq{ font-size:14px; color:#14418a; line-height:1.6; padding:7px 0; border-bottom:1px dashed var(--blue-line); }
+  .demo-fb .dfq:last-of-type{ border-bottom:none; }
+  .demo-fb .dfn{ margin-top:11px; font-size:12px; color:var(--muted); line-height:1.55; }
+  .trust-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:820px; margin:0 auto; }
+  @media(max-width:700px){ .trust-stats{ grid-template-columns:1fr; } }
+  .tstat{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; }
+  .tstat .tn{ font-size:32px; font-weight:800; color:var(--blue); letter-spacing:-.5px; }
+  .tstat .tl{ font-size:12.5px; color:var(--muted); margin-top:6px; line-height:1.5; }
+  .qwall{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; max-width:1120px; margin:0 auto; }
+  @media(max-width:900px){ .qwall{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:600px){ .qwall{ grid-template-columns:1fr; } }
+  .qcard{ background:var(--card); border:1px solid var(--border); border-left:3px solid var(--green); border-radius:12px; padding:14px 16px; position:relative; }
+  .qcard .qt{ font-size:13.5px; color:var(--text); line-height:1.55; }
+  .qcard .qn{ margin-top:9px; font-size:11.5px; color:var(--dim); font-weight:600; }
+  .honest{ max-width:720px; margin:0 auto; display:grid; gap:10px; }
+  .hrow{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 16px; }
+  .hrow .hh{ font-size:13px; font-weight:700; color:var(--text); }
+  .hrow .hb{ font-size:12.5px; color:var(--muted); margin-top:5px; line-height:1.6; }
+  .hrow.warn{ border-left:3px solid var(--amber); }
+  .hrow.neg{ border-left:3px solid var(--red); }
 
   /* Behavior library (arch view) */
   .behav-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:940px; margin:0 auto; }
@@ -336,6 +360,7 @@
     <a class="navlink" href="#viewDeal">Deal thật</a>
     <a class="navlink" href="#viewArch">Cách hoạt động</a>
     <a class="navlink" href="#viewOps">Kết quả</a>
+    <a class="navlink" href="#viewTrust">Niềm tin</a>
   </div>
   <div class="conn"><span class="dot"></span>Đang kết nối với AI</div>
 </div>
@@ -430,6 +455,47 @@
     </div>
   </div>
   <div class="section-note">Nguồn: Milestone Transitions từ dashboard nội bộ Vucar (7 Transitions); ops metrics tính từ CRM (db=2) + Zalo (db=11), 06/2026.</div>
+</div>
+
+<div class="view archwrap" id="viewTrust">
+  <div class="eyebrow">Niềm tin khách hàng</div>
+  <div class="arch-title">Khách hàng phản ứng thế nào với agent?</div>
+  <div class="arch-sub">Không phải khảo sát dàn dựng — đây là lời khách nhắn thẳng trên Zalo. Chúng tôi để cả lời khen, lời chê, và cả những khách nhận ra “có gì đó là máy”.</div>
+
+  <div class="section-lbl">Chính khách trong deal demo — anh Hiếu (Santafe)</div>
+  <div class="demo-fb">
+    <div class="dfh">💬 Nguyên văn tin nhắn anh Hiếu — toàn bộ hội thoại do AI phụ trách</div>
+    <div class="dfq">“A có bớt 1 chút để ra lộc cho khách mà e”</div>
+    <div class="dfq">“Xe a đi ít lắm, thay dàn lốp Michelin rồi, đèn pha thay sáng hơn… A bớt thêm 5tr cho khách”</div>
+    <div class="dfq">“Ok e” → chốt 889 triệu (13/06)</div>
+    <div class="dfn">Anh Hiếu xưng “e / anh” như đang nhắn một bạn sale thật, chủ động trả giá và chốt sau 3 ngày — <b>không hề biết mình đang nói chuyện với AI</b>. (Deal này chưa qua khảo sát chấm sao riêng; tín hiệu niềm tin là chính phản ứng trong hội thoại.)</div>
+  </div>
+
+  <div class="section-lbl">Tháng 6/2026 — số thật từ Zalo</div>
+  <div class="trust-stats">
+    <div class="tstat"><div class="tn">1.365</div><div class="tl">khách chủ động nhắn “cảm ơn” cho agent trong tháng (2.410 tin)</div></div>
+    <div class="tstat"><div class="tn">87%</div><div class="tl">tin nhắn gửi khách do AI đảm nhiệm (64K / 74K tin, ~5.300 cuộc)</div></div>
+    <div class="tstat"><div class="tn">~9</div><div class="tl">khách/tháng nghi “có phải bot?” — trên ~5.300 cuộc AI phụ trách (&lt;0,2%)</div></div>
+  </div>
+
+  <div class="section-lbl">Lời khách nói về dịch vụ</div>
+  <div class="qwall">
+    <div class="qcard"><div class="qt">“cảm ơn em, anh sẽ nhắn cho em khi thấy muốn bán xe, anh thấy <b>dịch vụ này rất tuyệt</b>”</div><div class="qn">— Trần Văn Cảnh · 30/06</div></div>
+    <div class="qcard"><div class="qt">“cảm ơn em đã <b>nhiệt tình hỗ trợ</b> anh ạ”</div><div class="qn">— Vũ Đình Lưu · 30/06</div></div>
+    <div class="qcard"><div class="qt">“Cảm ơn a <b>hỗ trợ nhiệt tình quá</b>”</div><div class="qn">— Lý Thiên Sinh · 30/06</div></div>
+    <div class="qcard"><div class="qt">“Cảm ơn em nhiều, <b>chúc công việc của em luôn thuận lợi</b>, thành công!”</div><div class="qn">— A Đức · 30/06</div></div>
+    <div class="qcard"><div class="qt">“Cảm ơn em. Xe anh khách mà <b>thấy trực tiếp là ưng ý ngay</b>. Tks em”</div><div class="qn">— Nguyễn Văn Phúc · 30/06</div></div>
+    <div class="qcard"><div class="qt">“Tôi thấy Vucar <b>rất tốt</b>. Nhân viên nhiệt tình. Coi xe kỹ và cẩn thận”</div><div class="qn">— khảo sát in-app (sell_experience) · 5★</div></div>
+  </div>
+
+  <div class="section-lbl">Nói thẳng — khách chê gì & có nhận ra AI không?</div>
+  <div class="honest">
+    <div class="hrow warn"><div class="hh">Phản đối chủ yếu về GIÁ, không phải về dịch vụ</div><div class="hb">Hàng trăm tin “giá thấp quá / rẻ quá anh không bán” — đó là bid dealer chưa đủ cao, bản chất thương lượng thị trường, không phải lỗi agent. Chính điểm này khiến agent càng cần định giá sát để giữ khách lại bàn.</div></div>
+    <div class="hrow neg"><div class="hh">Negative thật về trải nghiệm (hiếm nhưng có)</div><div class="hb">“Do hôm trước <b>đợi lâu quá</b> nên chị cho thuê rồi” — phản hồi chậm làm mất deal. “<b>Lặp như robot</b>” — agent đôi lúc trả lời máy móc. “e để cho a hy vọng, cuối cùng <b>thất vọng</b> tràn trề” — kỳ vọng giá không khớp. Đây là các điểm đang được siết bằng SOP + guardrail.</div></div>
+    <div class="hrow"><div class="hh">Khách có nhận ra đang nhắn với AI không?</div><div class="hb">Gần như không. Đa số xưng “em / anh / bạn” như với người thật. Cả tháng chỉ ~9 khách hỏi “bot à?” — ví dụ <i>“tổng đài bên em là bot tự động hả em, sao gọi nói gì lạ vậy @@”</i>. Câu hỏi về niềm tin phổ biến hơn lại là về <b>danh tính / phí</b> chứ không phải người-hay-máy: <i>“vì sao đảm bảo e có phải nhân viên chính thức của cty Vucar k”</i>.</div></div>
+  </div>
+
+  <div class="section-note">Nguồn: tin nhắn khách inbound trên Zalo (db=11), lọc thread khách thật (loại nội bộ Vucar), 01–30/06/2026 + khảo sát in-app user_feedback (db=2). Trích nguyên văn, chỉ ẩn thông tin nhạy cảm.</div>
 </div>
 
 <div class="wrap view" id="viewDeal">
