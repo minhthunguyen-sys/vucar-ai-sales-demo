@@ -213,6 +213,33 @@
   .why-callout{ max-width:700px; margin:24px auto 0; background:var(--blue-soft); border:1px solid var(--blue-line); border-radius:12px; padding:14px 18px; font-size:13px; color:#14418a; line-height:1.6; }
   .why-callout b{ color:var(--blue); }
 
+  /* Operations view: funnel + ops KPIs */
+  .funnel-top{ display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:7px; font-size:15px; font-weight:700; margin-bottom:20px; color:var(--text); }
+  .funnel-top .fa{ color:var(--dim); }
+  .funnel-top b.g{ color:var(--green); } .funnel-top b.r{ color:var(--red); }
+  .tcards{ display:grid; grid-template-columns:repeat(6,1fr); gap:11px; max-width:1120px; margin:0 auto; }
+  @media(max-width:920px){ .tcards{ grid-template-columns:repeat(3,1fr); } }
+  @media(max-width:560px){ .tcards{ grid-template-columns:repeat(2,1fr); } }
+  .tcard{ border-radius:12px; padding:13px 14px; border:1px solid; }
+  .tcard.win{ background:var(--green-soft); border-color:#bfe6cd; }
+  .tcard.lag{ background:#fdecec; border-color:#f6c9cb; }
+  .tcard .tt{ font-size:13px; font-weight:700; }
+  .tcard .tn{ font-size:11px; color:var(--muted); margin-top:1px; min-height:28px; }
+  .tcard .tbig{ font-size:26px; font-weight:800; margin:5px 0 3px; letter-spacing:-.5px; }
+  .tcard.win .tbig{ color:var(--green); } .tcard.lag .tbig{ color:var(--red); }
+  .tcard .tfrac{ font-size:10.5px; color:var(--muted); }
+  .tcard .tpp{ font-weight:700; } .tpp.g{ color:var(--green); } .tpp.r{ color:var(--red); }
+  .tcard .thuman{ font-size:11px; color:var(--dim); margin-top:8px; border-top:1px solid rgba(0,0,0,.07); padding-top:6px; }
+  .ops-groups{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:1000px; margin:0 auto; }
+  @media(max-width:820px){ .ops-groups{ grid-template-columns:1fr; } }
+  .opsg{ background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; border-top:3px solid var(--blue); }
+  .opsg .ogh{ font-size:14px; font-weight:700; }
+  .opsg .ogs{ font-size:11.5px; color:var(--dim); margin:2px 0 12px; }
+  .ometric{ padding:9px 0; border-bottom:1px dashed var(--line); }
+  .ometric:last-child{ border-bottom:none; }
+  .ometric .om-n{ font-size:19px; font-weight:800; color:var(--text); }
+  .ometric .om-l{ font-size:12px; color:var(--muted); margin-top:1px; }
+
   /* Raw log (deal view) */
   .rawlog{ margin:12px 16px 4px; border-top:1px solid var(--line); }
   .rawlog summary{ cursor:pointer; font-size:12px; font-weight:600; color:var(--blue); padding:11px 2px 8px; list-style:none; font-family:ui-monospace,Menlo,monospace; }
@@ -260,6 +287,7 @@
   </div>
   <div class="views" id="views">
     <button class="vbtn active" data-v="arch">Kiến trúc &amp; Vì sao</button>
+    <button class="vbtn" data-v="ops">Vận hành AI</button>
     <button class="vbtn" data-v="deal">Deal thật</button>
   </div>
   <div class="steps" id="steps" style="display:none"></div>
@@ -328,6 +356,48 @@
   <div class="section-note">Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_logs</code> / <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_steps</code> (db=9) · 3,93M dòng log · 73.968 lượt chạy</div>
 
   <div class="arch-cta"><button data-v="deal">▶ Xem một deal thật</button></div>
+</div>
+
+<!-- VIEW: AI Operations -->
+<div class="view archwrap" id="viewOps">
+  <div class="arch-title">AI Operation Leverage — coi agent như một dây chuyền vận hành</div>
+  <div class="arch-sub">Đo bằng 4 thước đo vận hành: <b>Throughput · Cycle time · Variance · SOP</b>. AI cho đòn bẩy lớn nhất ở khúc nuôi lead–gom ảnh–đẩy bid; khâu chạm giá đầu và chốt sau kiểm định vẫn cần người + SOP v2.</div>
+
+  <div class="section-lbl">SOP conversion funnel — Milestone Transitions (AI vs người)</div>
+  <div class="funnel-top">Lead <span class="fa">→</span><b class="r">60%</b><span class="fa">→</span><b class="g">76%</b><span class="fa">→</span><b class="g">92%</b><span class="fa">→</span><b class="g">20%</b><span class="fa">→</span><b class="g">47%</b><span class="fa">→</span><b class="r">13%</b><span class="fa">→</span>Win</div>
+  <div class="tcards">
+    <div class="tcard lag"><div class="tt">T1</div><div class="tn">Lead → Báo giá</div><div class="tbig">60.4%</div><div class="tfrac">3258/5398 · <span class="tpp r">−15.6pp</span></div><div class="thuman">Người: 76%</div></div>
+    <div class="tcard win"><div class="tt">T2</div><div class="tn">Báo giá → 4+ ảnh</div><div class="tbig">76.2%</div><div class="tfrac">2483/3258 · <span class="tpp g">+32.1pp</span></div><div class="thuman">Người: 44.1%</div></div>
+    <div class="tcard win"><div class="tt">T3</div><div class="tn">Ảnh → Bid</div><div class="tbig">91.8%</div><div class="tfrac">2280/2483 · <span class="tpp g">+10.7pp</span></div><div class="thuman">Người: 81.1%</div></div>
+    <div class="tcard win"><div class="tt">T4</div><div class="tn">Bid → Gap ≤20tr</div><div class="tbig">20.4%</div><div class="tfrac">523/2561 · <span class="tpp g">+0.4pp</span></div><div class="thuman">Người: 20%</div></div>
+    <div class="tcard win"><div class="tt">T5</div><div class="tn">Gap ≤20tr → Kiểm định</div><div class="tbig">46.8%</div><div class="tfrac">245/523 · <span class="tpp g">+4.5pp</span></div><div class="thuman">Người: 42.3%</div></div>
+    <div class="tcard lag"><div class="tt">T7</div><div class="tn">Kiểm định → Win</div><div class="tbig">13.3%</div><div class="tfrac">125/937 · <span class="tpp r">−21.3pp</span></div><div class="thuman">Người: 34.6%</div></div>
+  </div>
+  <div class="why-callout">💡 <b>Đọc funnel:</b> AI vượt người rõ ở <b>T2 (+32pp)</b>, <b>T3 (+11pp)</b>, T5 (+4.5pp) — khâu nuôi lead, gom ảnh, đẩy bid ⇒ <b>đòn bẩy throughput khổng lồ</b>. Còn thua ở <b>T1</b> (chạm giá đầu −15.6pp) &amp; <b>T7</b> (chốt sau kiểm định −21.3pp) ⇒ đúng 2 điểm nghẽn hai đầu phễu, nơi tập trung người + SOP v2.</div>
+
+  <div class="section-lbl">Đòn bẩy vận hành — số thật (06/2026)</div>
+  <div class="ops-groups">
+    <div class="opsg">
+      <div class="ogh">⚙️ Throughput</div><div class="ogs">Khối lượng một AI gánh</div>
+      <div class="ometric"><div class="om-n">1.07M</div><div class="om-l">tin nhắn xử lý · 74K phiên chạy</div></div>
+      <div class="ometric"><div class="om-n">94.8%</div><div class="om-l">tin ngoài giờ (22h–7h) do AI</div></div>
+      <div class="ometric"><div class="om-n">~4×</div><div class="om-l">volume so với người (20,2K vs 4,9K tin/tháng)</div></div>
+    </div>
+    <div class="opsg" style="border-top-color:#0e9aa7">
+      <div class="ogh">⏱️ Cycle time</div><div class="ogs">Tốc độ vòng đời deal</div>
+      <div class="ometric"><div class="om-n">~3 phút</div><div class="om-l">phản hồi (median), phủ 24/7</div></div>
+      <div class="ometric"><div class="om-n">6 ngày</div><div class="om-l">median Lead→Win · 45% chốt ≤5 ngày</div></div>
+      <div class="ometric"><div class="om-n">3 ngày</div><div class="om-l">deal Santafe demo — nhanh gấp đôi median</div></div>
+    </div>
+    <div class="opsg" style="border-top-color:#b7791f">
+      <div class="ogh">📉 Variance — “thuế”</div><div class="ogs">Càng ổn định càng rẻ</div>
+      <div class="ometric"><div class="om-n">10 vs 27 phút</div><div class="om-l">p90 phản hồi: AI vs người (AI ổn định hơn)</div></div>
+      <div class="ometric"><div class="om-n">6 → 40 ngày</div><div class="om-l">median vs p90 Lead→Win — đuôi dài = nơi mất tiền</div></div>
+      <div class="ometric"><div class="om-n">SOP v2</div><div class="om-l">chuẩn hoá đuôi variance = đòn bẩy tiếp theo</div></div>
+    </div>
+  </div>
+  <div class="section-note">Nguồn: Milestone Transitions từ dashboard nội bộ Vucar (7 Transitions); ops metrics tính từ CRM (db=2) + Zalo (db=11), 06/2026.</div>
+  <div class="arch-cta"><button data-v="deal">▶ Xem deal thật</button></div>
 </div>
 
 <div class="wrap view" id="viewDeal">
@@ -661,6 +731,7 @@ document.querySelectorAll('.node').forEach(el=> el.onclick=()=> showNode(el.data
 function setView(v){
   document.querySelectorAll('.vbtn').forEach(b=> b.classList.toggle('active', b.dataset.v===v));
   document.getElementById('viewArch').classList.toggle('active', v==='arch');
+  document.getElementById('viewOps').classList.toggle('active', v==='ops');
   document.getElementById('viewDeal').classList.toggle('active', v==='deal');
   document.getElementById('steps').style.display = v==='deal' ? 'flex' : 'none';
   window.scrollTo(0,0);
