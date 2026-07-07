@@ -188,6 +188,8 @@
   .mirror-head .mh-s{ font-size:12.5px; color:var(--muted); }
   .live-badge{ margin-left:auto; display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--red); background:#fdecec; border:1px solid #f6cdcd; border-radius:20px; padding:4px 12px; }
   .live-badge .d{ width:8px; height:8px; border-radius:50%; background:var(--red); animation:pulse 1.3s infinite; }
+  .m-wait{ display:flex; align-items:center; justify-content:center; gap:9px; flex-wrap:wrap; text-align:center; background:var(--blue-soft); border:1px solid var(--blue-line); color:#0a4f9e; border-radius:12px; padding:13px 16px; font-size:13.5px; font-weight:600; margin-bottom:14px; animation:pop .3s ease; }
+  .m-wait .mw-sub{ display:block; width:100%; color:var(--muted); font-size:11.5px; margin-top:3px; font-weight:400; }
   .mirror{ display:grid; grid-template-columns:1.1fr 1fr; gap:18px; align-items:start; }
   @media(max-width:900px){ .mirror{ grid-template-columns:1fr; } }
   .mcol{ background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
@@ -528,6 +530,7 @@
         <div><div class="mh-t" id="mhName">Đang tải lead…</div><div class="mh-s" id="mhCar"></div></div>
         <span class="live-badge"><span class="d"></span>ĐANG THEO DÕI TRỰC TIẾP</span>
       </div>
+      <div class="m-wait" id="mWait" hidden></div>
       <div class="mirror">
         <div class="mcol">
           <div class="mcol-h">💬 Hội thoại của bạn với agent <span class="zalo">ZALO</span></div>
@@ -1018,7 +1021,8 @@ showNode('harness');
 playStage(0);
 
 /* ============ Trải nghiệm thử — live experience ============ */
-// Set PROXY_URL to your deployed read-only proxy to go fully live (see experience-proxy/).
+// Set PROXY_URL to the vucar-e2e read-only route to go fully live:
+//   https://<your-vucar-e2e-app>/api/lead-runtime   (route: app/api/lead-runtime/route.ts)
 // Empty => demo mode using a real anonymised sample lead.
 const PROXY_URL = '';
 let tryTimers = [], tryPoll = null;
@@ -1096,12 +1100,13 @@ function tkHTML(t){
   const tool = t.tool?`<code>${t.tool}</code>`:'';
   return `<div class="tk ${cls}"><span class="tk-dot"></span><div class="tk-b"><div class="tk-lab">${t.lab} ${tool}</div><div class="tk-x">${t.x}</div>${chip}</div></div>`;
 }
-function startMirror(data){
+// ---- MOCK mode: scripted replay of the real anonymised sample ----
+function startMirrorMock(data){
   curLead=data;
   $('mhName').textContent = data.name||'Lead của bạn';
   $('mhCar').textContent = data.car||'';
   $('mhAva').textContent = (data.avatar||(data.name||'?').trim()[0]||'?');
-  $('mChat').innerHTML=''; $('mThink').innerHTML='';
+  $('mChat').innerHTML=''; $('mThink').innerHTML=''; hideWait();
   tryStep(3);
   const feed=data.feed||[]; let i=0;
   const chat=$('mChat'), think=$('mThink');
@@ -1118,28 +1123,68 @@ function startMirror(data){
   tryWait(play, 500);
 }
 
-// data source: live proxy or sample
+// ---- LIVE mode: poll the read-only route, fill in as real data lands ----
+function showWait(html){ const w=$('mWait'); w.hidden=false; w.innerHTML=html; }
+function hideWait(){ const w=$('mWait'); w.hidden=true; w.innerHTML=''; }
+function appendFeedItem(it){
+  if(it.col==='chat'){ const c=$('mChat'); c.insertAdjacentHTML('beforeend', msgHTML(it)); c.scrollTop=c.scrollHeight; }
+  else { const t=$('mThink'); t.insertAdjacentHTML('beforeend', tkHTML(it)); t.scrollTop=t.scrollHeight; }
+}
+function startMirrorLive(phone){
+  $('mChat').innerHTML=''; $('mThink').innerHTML='';
+  $('mhName').textContent='Đang tải lead…'; $('mhCar').textContent=''; $('mhAva').textContent='?';
+  tryStep(3);
+  showWait('<span class="spin"></span>Đang kết nối với lead của bạn…');
+  let rendered=0, gotHeader=false, misses=0, polls=0;
+  async function poll(){
+    polls++;
+    let d;
+    try{ d = await fetchLead(phone); }
+    catch(_){ if(++misses>=4) showWait('<span class="spin"></span>Đang thử kết nối lại…'); return; }
+    misses=0;
+    if(!d || !d.found){
+      showWait(polls>25 ? 'Chưa thấy lead theo số này — kiểm tra lại SĐT giúp mình nhé.'
+                        : '<span class="spin"></span>Đang chờ hệ thống ghi nhận lead của bạn…');
+      return;
+    }
+    if(!gotHeader){ $('mhName').textContent=d.name||'Lead của bạn'; $('mhCar').textContent=d.car||''; $('mhAva').textContent=d.avatar||'?'; gotHeader=true; }
+    const feed=d.feed||[];
+    for(let k=rendered; k<feed.length; k++) appendFeedItem(feed[k]);
+    rendered=Math.max(rendered, feed.length);
+    const w=d.waiting||{};
+    if(feed.length===0){
+      showWait('✓ Đã nhận xe <b>'+(d.car||'của bạn')+'</b> — agent đang chuẩn bị xử lý lead của bạn…'
+             +'<span class="mw-sub">Suy nghĩ &amp; tin nhắn của agent sẽ hiện ngay tại đây trong ít phút.</span>');
+    } else if(w.thinking){
+      showWait('<span class="spin"></span>Agent vừa bắt đầu — dòng suy nghĩ sẽ hiện trong giây lát…');
+    } else { hideWait(); }
+  }
+  poll();
+  tryPoll = setInterval(()=>{ if(polls>150){ clearInterval(tryPoll); tryPoll=null; return; } poll(); }, 4500);
+}
+
+// live data source. Returns parsed body incl. {found, waiting}. Throws only on network/HTTP error.
 async function fetchLead(phone){
-  if(!PROXY_URL) return SAMPLE;
-  const r = await fetch(`${PROXY_URL}?phone=${encodeURIComponent(phone)}`);
+  const r = await fetch(`${PROXY_URL}?phone=${encodeURIComponent(phone)}`, { cache:'no-store' });
   if(!r.ok) throw new Error('proxy '+r.status);
-  const d = await r.json();               // {name, car, avatar, feed:[{col,from,text,photo}|{col,kind,lab,tool,x,chip}]}
-  if(!d || !d.found) throw new Error('not found');
-  return d;
+  return await r.json();
 }
 
 // wiring
+let tryMode='mock', curPhone='';
 $('tryLink').addEventListener('click', e=>{ e.preventDefault(); openTry(); });
 $('tryClose').addEventListener('click', closeTry);
 document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('tryOv').classList.contains('on')) closeTry(); });
 $('tryPhone').addEventListener('input', e=>{ const digs=e.target.value.replace(/\D/g,''); $('tryStart').disabled = digs.length<9; });
-$('tryStart').addEventListener('click', async ()=>{
-  const phone=$('tryPhone').value.replace(/\D/g,'');
-  try{ curLead = await fetchLead(phone); }catch(_){ curLead = SAMPLE; }
+$('tryStart').addEventListener('click', ()=>{
+  curPhone=$('tryPhone').value.replace(/\D/g,'');
+  tryMode = PROXY_URL ? 'live' : 'mock';
+  if(tryMode==='mock'){ curLead=SAMPLE; }
+  else { curLead={ car:'xe của mình' }; fetchLead(curPhone).then(d=>{ if(d&&d.found&&d.car) curLead.car=d.car; }).catch(()=>{}); }
   runCall();
 });
-$('tryMock').addEventListener('click', ()=>{ curLead=SAMPLE; runCall(); });
-$('callDone').addEventListener('click', ()=> startMirror(curLead));
+$('tryMock').addEventListener('click', ()=>{ tryMode='mock'; curLead=SAMPLE; runCall(); });
+$('callDone').addEventListener('click', ()=>{ tryMode==='live' ? startMirrorLive(curPhone) : startMirrorMock(curLead); });
 $('callEnd').addEventListener('click', closeTry);
 
 </script>
