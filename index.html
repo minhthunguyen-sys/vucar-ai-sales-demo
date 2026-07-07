@@ -4,16 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vucar AI Sales Agent — Demo harness (deal thật)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
 <style>
   *{ box-sizing:border-box; margin:0; padding:0; }
   :root{
-    --bg:#f4f6f9; --card:#ffffff; --border:#e6e9ef; --line:#f0f2f5;
-    --text:#1a2230; --muted:#5f6b7d; --dim:#9aa4b2;
+    --bg:#f6f6f4; --card:#ffffff; --border:#e7e7e2; --line:#f1f0ec;
+    --text:#191d24; --muted:#5f6577; --dim:#9aa1af;
     --blue:#1479e6; --blue-soft:#eaf3fe; --blue-line:#cfe4fb;
     --green:#1a9d54; --green-soft:#eaf7ef;
     --amber:#b7791f; --teal:#0e9aa7; --red:#e5484d;
+    --font-ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Newsreader',Georgia,'Times New Roman',serif;
+    --shadow:0 1px 2px rgba(20,25,40,.04), 0 8px 24px -12px rgba(20,25,40,.10);
   }
-  body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; display:flex; flex-direction:column; min-height:100vh; }
+  body{ font-family:var(--font-ui); background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; flex-direction:column; min-height:100vh; }
   code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
 
   /* Top bar */
@@ -68,7 +74,7 @@
   .row .v{ color:var(--text); font-weight:600; text-align:right; }
 
   /* Chat */
-  .chat-wrap{ background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .chat-wrap{ background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; box-shadow:var(--shadow); }
   .chat-top{ padding:12px 16px; display:flex; align-items:center; gap:11px; border-bottom:1px solid var(--line); }
   .chat-top .who{ font-size:14px; font-weight:600; }
   .chat-top .who small{ display:block; color:var(--muted); font-weight:400; font-size:12px; }
@@ -104,6 +110,15 @@
   .slot.sel{ background:var(--green); color:#fff; font-weight:600; }
   .wg-btn{ width:100%; border-radius:10px; padding:11px; font-size:13px; font-weight:600; text-align:center; }
   .wg-btn.done{ background:var(--green-soft); color:var(--green); }
+  .wg-btn.proc{ background:#fff7ea; color:var(--amber); }
+  .spin{ display:inline-block; width:11px; height:11px; border:2px solid currentColor; border-right-color:transparent; border-radius:50%; vertical-align:-1px; margin-right:7px; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .d-row.proc .dot{ background:var(--amber); animation:pulse 1s infinite; }
+  .d-row .st.proc{ color:var(--amber); }
+  .wg-result.proc b{ color:var(--amber); font-size:13px; font-weight:600; }
+  .fu-time.proc{ color:var(--amber); font-size:13px; }
+  .fu-auto{ transition:.2s; }
+  .wg-swap{ animation:pop .35s ease; }
   .d-row{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--text); padding:5px 0; }
   .d-row .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); flex:0 0 auto; }
   .d-row .st{ margin-left:auto; font-size:11px; color:var(--green); }
@@ -129,7 +144,7 @@
   .wl-note{ margin-top:10px; padding-top:9px; border-top:1px solid var(--line); font-size:11px; color:var(--muted); }
 
   /* AI Reasoning */
-  .rp{ background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; position:sticky; top:82px; }
+  .rp{ background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; position:sticky; top:82px; box-shadow:var(--shadow); }
   .rp-h{ padding:15px 17px; border-bottom:1px solid var(--line); }
   .rp-h .t{ font-size:15px; font-weight:700; }
   .rp-h .s{ font-size:12px; color:var(--muted); margin-top:3px; }
@@ -165,18 +180,18 @@
   #viewOps{ order:3; }
   #viewTrust{ order:4; }
   .topbar{ order:0; } .foot{ order:9; }
-  #viewArch, #viewOps, #viewTrust{ border-top:1px solid var(--border); padding-top:60px; padding-bottom:64px; }
+  #viewArch, #viewOps, #viewTrust{ border-top:1px solid var(--border); padding-top:78px; padding-bottom:78px; }
   .navlink{ font-size:13.5px; font-weight:600; color:var(--muted); text-decoration:none; padding:6px 12px; border-radius:8px; }
   .navlink:hover{ color:var(--blue); background:var(--blue-soft); }
-  .eyebrow{ text-align:center; font-size:12px; font-weight:700; letter-spacing:2.2px; text-transform:uppercase; color:var(--blue); margin-bottom:12px; }
-  .deal-head{ grid-column:1/-1; margin-bottom:18px; }
-  .deal-head .dh-t{ font-size:26px; font-weight:750; letter-spacing:-.4px; text-align:center; }
-  .deal-head .dh-s{ text-align:center; color:var(--muted); font-size:14px; margin:6px auto 18px; max-width:640px; }
+  .eyebrow{ text-align:center; font-size:11.5px; font-weight:600; letter-spacing:2.6px; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
+  .deal-head{ grid-column:1/-1; margin-bottom:22px; }
+  .deal-head .dh-t{ font-family:var(--font-display); font-size:clamp(28px,5vw,38px); font-weight:500; letter-spacing:-.4px; line-height:1.1; text-align:center; }
+  .deal-head .dh-s{ text-align:center; color:var(--muted); font-size:15px; line-height:1.6; margin:10px auto 22px; max-width:620px; }
   .deal-head .steps{ justify-content:center; }
 
   /* Architecture view */
   .archwrap{ max-width:1040px; margin:0 auto; padding:26px 22px 44px; }
-  .arch-title{ text-align:center; font-size:27px; font-weight:750; letter-spacing:-.5px; }
+  .arch-title{ font-family:var(--font-display); text-align:center; font-size:clamp(25px,4.5vw,34px); font-weight:500; letter-spacing:-.4px; line-height:1.12; }
   .arch-sub{ text-align:center; color:var(--muted); font-size:14.5px; margin-top:8px; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; }
   .section-lbl{ font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--dim); text-align:center; margin:44px 0 18px; }
   .diagram{ display:grid; grid-template-columns:1fr 44px 1.15fr 44px 1fr; grid-template-rows:auto 30px auto 30px auto; align-items:center; justify-items:center; max-width:820px; margin:0 auto; }
@@ -362,7 +377,6 @@
     <a class="navlink" href="#viewOps">Kết quả</a>
     <a class="navlink" href="#viewTrust">Niềm tin</a>
   </div>
-  <div class="conn"><span class="dot"></span>Đang kết nối với AI</div>
 </div>
 
 <!-- VIEW: Architecture & Why -->
@@ -389,15 +403,23 @@
   <div class="arch-sub">Agent không đối xử mọi khách như nhau. Từ 1M+ hội thoại, nó đã học nhiều <b>nhóm hành vi người bán</b> và cách xử lý riêng cho từng nhóm — áp dụng hàng chục nghìn lần.</div>
   <div class="behav-grid" style="margin-top:16px">
     <div class="bcard"><div class="bi">🐢</div><div class="bn">Người bán thụ động</div><div class="bapp">2.310 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">📱</div><div class="bn">Casual, chưa rành quy trình</div><div class="bapp">1.665 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">🔗</div><div class="bn">Có tham chiếu giá bên ngoài</div><div class="bapp">1.392 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">📄</div><div class="bn">Vướng pháp lý / xe cầm cố</div><div class="bapp">1.390 lần áp dụng</div></div>
     <div class="bcard"><div class="bi">🏃</div><div class="bn">Người bán gấp</div><div class="bapp">1.229 lần áp dụng</div></div>
     <div class="bcard on"><div class="bi">📋</div><div class="bn">Người bán có kế hoạch</div><div class="bapp">1.096 lần áp dụng</div><div class="bhere">= anh Hiếu (deal demo)</div></div>
-    <div class="bcard"><div class="bi">💭</div><div class="bn">Chưa biết giá xe</div><div class="bw">đang học</div></div>
-    <div class="bcard"><div class="bi">👻</div><div class="bn">Re-engage sau ghost</div><div class="bw">đang theo dõi</div></div>
-    <div class="bcard"><div class="bi">🏔️</div><div class="bn">Người bán tỉnh xa</div><div class="bw">đang theo dõi</div></div>
-    <div class="bcard"><div class="bi">💰</div><div class="bn">Kỳ vọng giá cao</div><div class="bw">đang theo dõi</div></div>
-    <div class="bcard"><div class="bi">🔄</div><div class="bn">Trade-in (đổi xe)</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">🤔</div><div class="bn">Đang phân vân, chưa quyết</div><div class="bapp">1.073 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">🔍</div><div class="bn">Verify kỹ trước khi chốt</div><div class="bapp">1.068 lần áp dụng</div></div>
+    <div class="bcard"><div class="bi">💰</div><div class="bn">Kỳ vọng giá cao hơn thị trường</div><div class="bw">đang học</div></div>
+    <div class="bcard"><div class="bi">😤</div><div class="bn">Cứng giá, đàm phán rắn</div><div class="bw">đang học</div></div>
+    <div class="bcard"><div class="bi">🚗</div><div class="bn">Bán nhiều xe một lúc</div><div class="bw">đang học</div></div>
+    <div class="bcard"><div class="bi">🔄</div><div class="bn">Trade-in (đổi xe mới)</div><div class="bw">đang học</div></div>
+    <div class="bcard"><div class="bi">👻</div><div class="bn">Re-engage sau ghost dài</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">🏔️</div><div class="bn">Tỉnh xa, ngoài vùng kiểm định</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">🛠️</div><div class="bn">Tiết lộ lỗi xe khi đàm phán</div><div class="bw">đang theo dõi</div></div>
+    <div class="bcard"><div class="bi">💭</div><div class="bn">Chưa biết giá xe mình</div><div class="bw">đang theo dõi</div></div>
   </div>
-  <div class="section-note">Mỗi nhóm có pattern xử lý riêng, rút từ deal thật. Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_insights.customer_type</code> (db=9).</div>
+  <div class="section-note">16 nhóm hành vi, mỗi nhóm một cách xử lý riêng rút từ deal thật — nhóm có số là đã áp dụng ổn định, nhóm “đang học/theo dõi” là pattern mới đang được kiểm chứng. Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_insights.customer_type</code> (db=9).</div>
 
   <div class="section-lbl">Bên trong một lượt chạy — agent được tổ chức thế nào</div>
   <div class="logflow">
@@ -425,7 +447,7 @@
 <div class="view archwrap" id="viewOps">
   <div class="eyebrow">Kết quả</div>
   <div class="arch-title">AI Operation Leverage — coi agent như một dây chuyền vận hành</div>
-  <div class="arch-sub">Đo bằng các thước đo vận hành: <b>Throughput · Cycle time · SOP</b>. AI cho đòn bẩy lớn nhất ở khúc nuôi lead–gom ảnh–đẩy bid; khâu chạm giá đầu và chốt sau kiểm định vẫn cần người + SOP v2.</div>
+  <div class="arch-sub">Đo bằng các thước đo vận hành: <b>Throughput · Cycle time · SOP</b>. AI cho đòn bẩy lớn nhất ở khúc nuôi lead–gom ảnh–đẩy bid; khâu chạm giá đầu và chốt sau kiểm định vẫn cần người.</div>
 
   <div class="section-lbl">SOP conversion funnel — Milestone Transitions (AI vs người)</div>
   <div class="funnel-top">Lead <span class="fa">→</span><b class="r">60%</b><span class="fa">→</span><b class="g">76%</b><span class="fa">→</span><b class="g">92%</b><span class="fa">→</span><b class="g">20%</b><span class="fa">→</span><b class="g">47%</b><span class="fa">→</span><b class="r">13%</b><span class="fa">→</span>Win</div>
@@ -437,7 +459,7 @@
     <div class="tcard win"><div class="tt">T5</div><div class="tn">Gap ≤20tr → Kiểm định</div><div class="tbig">46.8%</div><div class="tfrac">245/523 · <span class="tpp g">+4.5pp</span></div><div class="thuman">Người: 42.3%</div></div>
     <div class="tcard lag"><div class="tt">T7</div><div class="tn">Kiểm định → Win</div><div class="tbig">13.3%</div><div class="tfrac">125/937 · <span class="tpp r">−21.3pp</span></div><div class="thuman">Người: 34.6%</div></div>
   </div>
-  <div class="why-callout"><b>Đọc funnel:</b> AI vượt người rõ ở <b>T2 (+32pp)</b>, <b>T3 (+11pp)</b>, T5 (+4.5pp) — khâu nuôi lead, gom ảnh, đẩy bid ⇒ <b>đòn bẩy throughput khổng lồ</b>. Còn thua ở <b>T1</b> (chạm giá đầu −15.6pp) &amp; <b>T7</b> (chốt sau kiểm định −21.3pp) ⇒ đúng 2 điểm nghẽn hai đầu phễu, nơi tập trung người + SOP v2.</div>
+  <div class="why-callout"><b>Đọc funnel:</b> AI vượt người rõ ở <b>T2 (+32pp)</b>, <b>T3 (+11pp)</b>, T5 (+4.5pp) — khâu nuôi lead, gom ảnh, đẩy bid ⇒ <b>đòn bẩy throughput khổng lồ</b>. Còn thua ở <b>T1</b> (chạm giá đầu −15.6pp) &amp; <b>T7</b> (chốt sau kiểm định −21.3pp) ⇒ đúng 2 điểm nghẽn hai đầu phễu, nơi tập trung nguồn lực con người.</div>
 
   <div class="section-lbl">Đòn bẩy vận hành — số thật (06/2026)</div>
   <div class="ops-groups">
@@ -460,7 +482,7 @@
 <div class="view archwrap" id="viewTrust">
   <div class="eyebrow">Niềm tin khách hàng</div>
   <div class="arch-title">Khách hàng phản ứng thế nào với agent?</div>
-  <div class="arch-sub">Không phải khảo sát dàn dựng — đây là lời khách nhắn thẳng trên Zalo. Chúng tôi để cả lời khen, lời chê, và cả những khách nhận ra “có gì đó là máy”.</div>
+  <div class="arch-sub">Đây là lời khách nhắn thẳng trên Zalo. Chúng tôi để cả lời khen, lời chê, và cả những khách nhận ra “có gì đó là máy”.</div>
 
   <div class="section-lbl">Chính khách trong deal demo — anh Hiếu (Santafe)</div>
   <div class="demo-fb">
@@ -469,13 +491,6 @@
     <div class="dfq">“Xe a đi ít lắm, thay dàn lốp Michelin rồi, đèn pha thay sáng hơn… A bớt thêm 5tr cho khách”</div>
     <div class="dfq">“Ok e” → chốt 889 triệu (13/06)</div>
     <div class="dfn">Anh Hiếu xưng “e / anh” như đang nhắn một bạn sale thật, chủ động trả giá và chốt sau 3 ngày — <b>không hề biết mình đang nói chuyện với AI</b>. (Deal này chưa qua khảo sát chấm sao riêng; tín hiệu niềm tin là chính phản ứng trong hội thoại.)</div>
-  </div>
-
-  <div class="section-lbl">Tháng 6/2026 — số thật từ Zalo</div>
-  <div class="trust-stats">
-    <div class="tstat"><div class="tn">1.365</div><div class="tl">khách chủ động nhắn “cảm ơn” cho agent trong tháng (2.410 tin)</div></div>
-    <div class="tstat"><div class="tn">87%</div><div class="tl">tin nhắn gửi khách do AI đảm nhiệm (64K / 74K tin, ~5.300 cuộc)</div></div>
-    <div class="tstat"><div class="tn">~9</div><div class="tl">khách/tháng nghi “có phải bot?” — trên ~5.300 cuộc AI phụ trách (&lt;0,2%)</div></div>
   </div>
 
   <div class="section-lbl">Lời khách nói về dịch vụ</div>
@@ -501,7 +516,7 @@
 <div class="wrap view" id="viewDeal">
   <div class="deal-head">
     <div class="eyebrow">Deal thật</div>
-    <div class="dh-t">Một thương vụ có thật — từ đầu đến chốt</div>
+    <div class="dh-t">Một giao dịch có thật — từ đầu đến cuối</div>
     <div class="dh-s">Hyundai Santafe 2021 · Hà Nội · chốt 889 triệu sau 3 ngày. Bấm từng bước để xem agent xử lý — cột phải là trace thật của harness.</div>
     <div class="steps" id="steps"></div>
   </div>
@@ -715,7 +730,7 @@ const NMAP = {
 };
 const CH = { khach:'Kênh · Khách', dealer:'Kênh · Dealer', kd:'Kênh · Kiểm định' };
 
-let cur = 0, playing = true, speed = 1, timer = null, pending = null, qi = 0, queue = [];
+let cur = 0, playing = true, speed = 1, timer = null, pending = null, qi = 0, queue = [], gWid = 0;
 const $ = id => document.getElementById(id);
 const avaAgent = '<span class="ava sm" data-init="V"><img src="assets/agent.jpg" onerror="this.remove()"></span>';
 const avaCust = '<span class="ava cust sm" data-init="H"><img src="assets/customer.jpg" onerror="this.remove()"></span>';
@@ -739,18 +754,19 @@ function renderRawlog(){
     `<span class="rtx">${r.n?`<b>${r.n}</b> `:''}${r.x}</span></div>`
   ).join('');
 }
-function widgetHTML(w){
+function widgetHTML(w, proc){
+  const sp = '<span class="spin"></span>';
   if(w.type==='booking') return `<div class="widget"><div class="wg-h"><span class="nav l">‹</span>${w.date}<span class="nav r">›</span></div>`+
-    `<div class="slots">`+w.slots.map(s=>`<span class="slot ${s.sel?'sel':''}">${s.t}</span>`).join('')+`</div>`+
-    `<div class="wg-btn done">${w.btn}</div></div>`;
+    `<div class="slots">`+w.slots.map(s=>`<span class="slot ${(!proc&&s.sel)?'sel':''}">${s.t}</span>`).join('')+`</div>`+
+    (proc?`<div class="wg-btn proc">${sp}Đang đặt lịch kiểm định…</div>`:`<div class="wg-btn done">${w.btn}</div>`)+`</div>`;
   if(w.type==='dealers') return `<div class="widget"><div class="wg-h">${w.title}<span class="badge">${w.badge}</span></div>`+
-    w.rows.map(r=>`<div class="d-row"><span class="dot"></span>${r}<span class="st">đã gửi</span></div>`).join('')+
-    `<div class="wg-result"><span>${w.resultLabel}</span><b>${w.result}</b></div></div>`;
+    w.rows.map(r=>`<div class="d-row ${proc?'proc':''}"><span class="dot"></span>${r}<span class="st ${proc?'proc':''}">${proc?'đang gửi…':'đã gửi'}</span></div>`).join('')+
+    (proc?`<div class="wg-result proc"><span>${w.resultLabel}</span><b>${sp}đang chờ bid…</b></div>`:`<div class="wg-result"><span>${w.resultLabel}</span><b>${w.result}</b></div>`)+`</div>`;
   if(w.type==='deposit') return `<div class="widget"><div class="wg-h">${w.title}</div>`+
     w.lines.map(l=>`<div class="p-line ${l.big?'big':''}"><span>${l.k}</span><span>${l.big?'<b>'+l.v+'</b>':l.v}</span></div>`).join('')+
-    `<div class="wg-btn done">${w.btn}</div></div>`;
-  if(w.type==='followup') return `<div class="widget"><div class="fu-top"><span class="fu-lbl">⏰ Lên lịch nhắc follow-up</span><span class="fu-auto">tự động</span></div>`+
-    `<div class="fu-time">🕘 ${w.time}</div><div class="fu-reason">${w.reason}</div></div>`;
+    (proc?`<div class="wg-btn proc">${sp}Đang chốt & ghi nhận cọc…</div>`:`<div class="wg-btn done">${w.btn}</div>`)+`</div>`;
+  if(w.type==='followup') return `<div class="widget"><div class="fu-top"><span class="fu-lbl">⏰ Lên lịch nhắc follow-up</span><span class="fu-auto">${proc?'đang đặt…':'tự động'}</span></div>`+
+    (proc?`<div class="fu-time proc">${sp}Đang lên lịch nhắc…</div>`:`<div class="fu-time">🕘 ${w.time}</div><div class="fu-reason">${w.reason}</div>`)+`</div>`;
   if(w.type==='learning') return `<div class="widget wg-learn"><div class="wl-top"><span class="wl-lbl">♻️ Self-learning · mẫu hình từ deal thật</span><span class="wl-auto">chờ người duyệt</span></div>`+
     w.insights.map(it=>`<div class="wl-item"><span class="wl-ic">💡</span><div class="wl-txt">${it.text}${it.tag?`<div class="tag">${it.tag}</div>`:''}</div></div>`).join('')+
     `<div class="wl-note">${w.note}</div></div>`;
@@ -796,7 +812,22 @@ function thinkStep(turn){
   const steps = turn.think||[];
   if(turn._i>=steps.length){
     if(turn.t){ const meta=turn.m?`<div class="meta">${turn.m}</div>`:''; appendChat(`<div class="line ai"><div class="bubble">${turn.t.replace(/\n/g,'<br>')}${meta}</div>${avaAgent}</div>`); }
-    if(turn.wg){ appendChat(widgetHTML(turn.wg)); }
+    if(turn.wg){
+      const anim = turn.wg.type!=='learning';
+      if(anim){
+        const wid='wg'+(gWid++);
+        appendChat(`<div id="${wid}">${widgetHTML(turn.wg,true)}</div>`);
+        $('procStep').innerHTML='<span class="cur"></span>Agent đang thực hiện hành động…'; lightNode('tools');
+        schedule(()=>{
+          const box=document.getElementById(wid);
+          if(box){ box.innerHTML=widgetHTML(turn.wg,false); if(box.firstElementChild) box.firstElementChild.classList.add('wg-swap'); const c=$('chat'); c.scrollTop=c.scrollHeight; }
+          $('procStep').innerHTML='✓ Xong — đã gửi cho khách'; lightNode(null);
+          schedule(advance, 760);
+        }, 1150);
+        return;
+      }
+      appendChat(widgetHTML(turn.wg));
+    }
     $('procStep').innerHTML='→ Đã gửi cho khách'; lightNode(null);
     schedule(advance, turn.wg?1050:820); return;
   }
