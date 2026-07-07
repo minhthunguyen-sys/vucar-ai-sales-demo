@@ -121,6 +121,95 @@
   .fu-time.proc{ color:var(--amber); font-size:13px; }
   .fu-auto{ transition:.2s; }
   .wg-swap{ animation:pop .35s ease; }
+
+  /* ===== Trải nghiệm thử (live experience overlay) ===== */
+  .navlink-cta{ color:#fff; background:var(--accent); }
+  .navlink-cta:hover{ color:#fff; background:#c8371a; }
+  .try-ov{ position:fixed; inset:0; z-index:200; background:var(--bg); display:none; flex-direction:column; overflow-y:auto; }
+  .try-ov.on{ display:flex; }
+  .try-topbar{ display:flex; align-items:center; gap:14px; padding:14px 24px; border-bottom:1px solid var(--border); background:var(--card); position:sticky; top:0; z-index:5; }
+  .try-topbar .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:17px; color:var(--blue); }
+  .try-topbar .brand svg{ width:24px; height:24px; }
+  .try-prog{ display:flex; gap:7px; margin:0 auto; }
+  .try-dot{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--dim); }
+  .try-dot .b{ width:22px; height:22px; border-radius:50%; background:#e9edf2; color:var(--muted); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .try-dot.on{ color:var(--text); } .try-dot.on .b{ background:var(--blue); color:#fff; }
+  .try-dot.done .b{ background:var(--green); color:#fff; }
+  .try-x{ width:34px; height:34px; border-radius:9px; border:1px solid var(--border); background:var(--card); color:var(--muted); font-size:16px; cursor:pointer; }
+  .try-x:hover{ border-color:var(--accent); color:var(--accent); }
+  .try-step{ display:none; flex:1; }
+  .try-step.on{ display:block; animation:pop .4s ease; }
+
+  /* step 1 — lead */
+  .s1{ max-width:640px; margin:0 auto; padding:56px 24px; text-align:center; }
+  .s1 .eyebrow{ color:var(--accent); }
+  .s1 h1{ font-family:var(--font-display); font-size:clamp(24px,4vw,34px); font-weight:600; letter-spacing:-.5px; line-height:1.22; }
+  .s1 p{ color:var(--muted); font-size:15px; line-height:1.6; margin:12px auto 26px; max-width:520px; }
+  .s1-card{ background:var(--card); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); padding:26px; text-align:left; }
+  .s1-num{ display:flex; align-items:flex-start; gap:13px; padding:13px 0; }
+  .s1-num + .s1-num{ border-top:1px solid var(--line); }
+  .s1-num .i{ width:26px; height:26px; border-radius:50%; background:var(--blue-soft); color:var(--blue); font-weight:800; font-size:13px; display:flex; align-items:center; justify-content:center; flex:0 0 auto; }
+  .s1-num .tt{ font-size:14px; font-weight:700; }
+  .s1-num .ds{ font-size:12.5px; color:var(--muted); margin-top:2px; line-height:1.5; }
+  .try-btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:13px; border-radius:11px; border:none; background:var(--blue); color:#fff; font-size:14.5px; font-weight:700; font-family:var(--font-ui); cursor:pointer; transition:.15s; }
+  .try-btn:hover{ background:var(--blue-deep); }
+  .try-btn.accent{ background:var(--accent); } .try-btn.accent:hover{ background:#c8371a; }
+  .try-btn:disabled{ opacity:.45; cursor:not-allowed; }
+  .try-btn.ghost{ background:var(--card); color:var(--blue); border:1px solid var(--blue-line); }
+  .try-btn.ghost:hover{ background:var(--blue-soft); }
+  .try-in{ width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:11px; font-size:15px; font-family:var(--font-ui); color:var(--text); background:var(--card); outline:none; }
+  .try-in:focus{ border-color:var(--blue); box-shadow:0 0 0 3px var(--blue-soft); }
+  .s1-lbl{ font-size:12px; font-weight:700; color:var(--muted); margin:20px 0 7px; display:block; }
+  .s1-note{ font-size:11.5px; color:var(--dim); margin-top:12px; line-height:1.5; }
+  .s1-mock{ background:none; border:none; color:var(--accent); font-size:12.5px; font-weight:600; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+
+  /* step 2 — bot call */
+  .s2{ min-height:calc(100vh - 62px); display:flex; align-items:center; justify-content:center; background:radial-gradient(120% 90% at 50% 0%, #0b1f38 0%, #071426 60%, #05101f 100%); }
+  .call{ text-align:center; color:#eaf2fb; padding:30px; max-width:420px; }
+  .call-tag{ font-size:12px; letter-spacing:2px; text-transform:uppercase; color:#7aa6d6; font-weight:600; }
+  .call-ava{ width:118px; height:118px; border-radius:50%; margin:22px auto 0; background:var(--blue); display:flex; align-items:center; justify-content:center; font-size:52px; position:relative; box-shadow:0 0 0 0 rgba(13,124,232,.5); animation:ring 1.8s infinite; }
+  @keyframes ring{ 0%{ box-shadow:0 0 0 0 rgba(13,124,232,.45);} 70%{ box-shadow:0 0 0 26px rgba(13,124,232,0);} 100%{ box-shadow:0 0 0 0 rgba(13,124,232,0);} }
+  .call-name{ font-family:var(--font-display); font-size:26px; font-weight:600; margin-top:22px; }
+  .call-sub{ font-size:14px; color:#9db8d6; margin-top:6px; }
+  .call-cap{ background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:15px 17px; margin-top:26px; font-size:14px; line-height:1.6; color:#dbe8f6; text-align:left; min-height:70px; }
+  .call-cap .cur{ display:inline-block; width:7px; height:15px; background:#7aa6d6; vertical-align:-2px; animation:blink 1s steps(1) infinite; }
+  .call-btns{ display:flex; gap:44px; justify-content:center; margin-top:30px; }
+  .call-b{ display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px; color:#9db8d6; cursor:pointer; background:none; border:none; }
+  .call-b .c{ width:62px; height:62px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; color:#fff; }
+  .call-b .c.end{ background:#e5484d; transform:rotate(135deg); }
+  .call-b .c.done{ background:var(--green); }
+  .call-b:hover .c{ filter:brightness(1.1); }
+
+  /* step 3 — live mirror */
+  .s3{ max-width:1240px; margin:0 auto; padding:20px 22px 60px; }
+  .mirror-head{ display:flex; align-items:center; gap:13px; flex-wrap:wrap; margin-bottom:16px; }
+  .mirror-head .ava{ width:44px; height:44px; border-radius:50%; }
+  .mirror-head .mh-t{ font-size:16px; font-weight:700; }
+  .mirror-head .mh-s{ font-size:12.5px; color:var(--muted); }
+  .live-badge{ margin-left:auto; display:inline-flex; align-items:center; gap:7px; font-size:12px; font-weight:700; color:var(--red); background:#fdecec; border:1px solid #f6cdcd; border-radius:20px; padding:4px 12px; }
+  .live-badge .d{ width:8px; height:8px; border-radius:50%; background:var(--red); animation:pulse 1.3s infinite; }
+  .mirror{ display:grid; grid-template-columns:1.1fr 1fr; gap:18px; align-items:start; }
+  @media(max-width:900px){ .mirror{ grid-template-columns:1fr; } }
+  .mcol{ background:var(--card); border:1px solid var(--border); border-radius:14px; box-shadow:var(--shadow); overflow:hidden; }
+  .mcol-h{ padding:12px 16px; border-bottom:1px solid var(--line); font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:var(--dim); display:flex; align-items:center; gap:8px; }
+  .mcol-h .zalo{ margin-left:auto; color:var(--blue); font-weight:700; }
+  .mchat{ height:520px; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:9px; background:linear-gradient(#fbfcfe,#f7f9fc); }
+  .mthink{ height:520px; overflow-y:auto; padding:14px 16px; }
+  .tk{ display:flex; gap:10px; padding:7px 0; animation:pop .3s ease; }
+  .tk .tk-dot{ width:9px; height:9px; border-radius:50%; margin-top:5px; flex:0 0 auto; background:var(--blue); }
+  .tk.think .tk-dot{ background:var(--dim); }
+  .tk.guard .tk-dot{ background:var(--accent); }
+  .tk .tk-b{ flex:1; }
+  .tk .tk-lab{ font-size:11px; font-weight:700; color:var(--muted); display:flex; align-items:center; gap:7px; }
+  .tk .tk-lab code{ font-family:ui-monospace,Menlo,monospace; font-size:10.5px; color:var(--blue); background:var(--blue-soft); border-radius:5px; padding:1px 6px; }
+  .tk.guard .tk-lab code{ color:var(--accent); background:var(--accent-soft); }
+  .tk .tk-x{ font-size:12.5px; color:var(--text); margin-top:3px; line-height:1.55; }
+  .tk.think .tk-x{ color:var(--muted); font-style:italic; }
+  .tk-chip{ display:inline-block; font-size:10px; font-weight:700; border-radius:20px; padding:1px 8px; margin-top:4px; }
+  .tk-chip.block{ color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line); }
+  .tk-chip.ok{ color:var(--green); background:var(--green-soft); }
+  .mthink-cur{ font-size:11.5px; color:var(--blue); font-weight:700; padding:8px 2px; display:flex; align-items:center; gap:8px; }
+  .mthink-cur .cur{ display:inline-block; width:7px; height:13px; background:var(--blue); animation:blink 1s steps(1) infinite; }
   .d-row{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--text); padding:5px 0; }
   .d-row .dot{ width:7px; height:7px; border-radius:50%; background:var(--green); flex:0 0 auto; }
   .d-row .st{ margin-left:auto; font-size:11px; color:var(--green); }
@@ -379,6 +468,77 @@
     <a class="navlink" href="#viewArch">Cách hoạt động</a>
     <a class="navlink" href="#viewOps">Kết quả</a>
     <a class="navlink" href="#viewTrust">Niềm tin</a>
+    <a class="navlink navlink-cta" href="#" id="tryLink">▶ Trải nghiệm thử</a>
+  </div>
+</div>
+
+<!-- ===== Trải nghiệm thử: live experience ===== -->
+<div class="try-ov" id="tryOv">
+  <div class="try-topbar">
+    <div class="brand"><svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0d7ce8"/><path d="M13 20 h22 l-3 5 h-16 z" fill="#fff"/><rect x="16" y="26" width="16" height="4" rx="2" fill="#fff"/></svg> Vucar</div>
+    <div class="try-prog" id="tryProg">
+      <span class="try-dot on" data-s="1"><span class="b">1</span>Để lại thông tin</span>
+      <span class="try-dot" data-s="2"><span class="b">2</span>Cuộc gọi từ Vucar</span>
+      <span class="try-dot" data-s="3"><span class="b">3</span>Xem agent làm việc</span>
+    </div>
+    <button class="try-x" id="tryClose">✕</button>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="try-step on" id="tryS1">
+    <div class="s1">
+      <div class="eyebrow">Trải nghiệm thật</div>
+      <h1>Để lại thông tin bán xe — rồi xem AI agent thật vào việc</h1>
+      <p>Bạn sẽ để lại một lead thật trên Vucar, nhận cuộc gọi như một người bán thật, và theo dõi <b>trực tiếp</b> agent xử lý lead của bạn — cả tin nhắn lẫn dòng suy nghĩ runtime.</p>
+      <div class="s1-card">
+        <div class="s1-num"><span class="i">1</span><div><div class="tt">Định giá xe trên Vucar</div><div class="ds">Mở trang Vucar, nhập xe + số điện thoại của bạn để nhận định giá. Đây là lead thật đi vào hệ thống.</div></div></div>
+        <div class="s1-num"><span class="i">2</span><div><div class="tt">Nhận cuộc gọi từ trợ lý Vucar</div><div class="ds">Như thực tế: bạn sẽ nhận cuộc gọi tự động để xác nhận thông tin xe.</div></div></div>
+        <div class="s1-num"><span class="i">3</span><div><div class="tt">Xem agent làm việc realtime</div><div class="ds">Agent nhắn Zalo cho bạn — màn hình này soi gương lại tin nhắn thật + suy nghĩ của agent, cập nhật liên tục.</div></div></div>
+        <a class="try-btn ghost" href="https://vucar.vn/" target="_blank" rel="noopener" style="margin-top:20px">Định giá xe trên Vucar ↗</a>
+        <label class="s1-lbl">Số điện thoại bạn vừa để lại</label>
+        <input class="try-in" id="tryPhone" type="tel" inputmode="numeric" placeholder="VD: 0912 345 678" autocomplete="off">
+        <button class="try-btn" id="tryStart" style="margin-top:14px" disabled>Bắt đầu theo dõi →</button>
+        <div class="s1-note">Chưa muốn để lại số? <button class="s1-mock" id="tryMock">Dùng một lead mẫu thật để xem trước →</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="try-step" id="tryS2">
+    <div class="s2">
+      <div class="call">
+        <div class="call-tag">Cuộc gọi đến</div>
+        <div class="call-ava">🚗</div>
+        <div class="call-name">Trợ lý Vucar</div>
+        <div class="call-sub" id="callSub">+84 28 7777 8888 · đang gọi…</div>
+        <div class="call-cap" id="callCap"></div>
+        <div class="call-btns">
+          <button class="call-b" id="callEnd"><span class="c end">📞</span>Từ chối</button>
+          <button class="call-b" id="callDone"><span class="c done">✓</span>Xong cuộc gọi</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="try-step" id="tryS3">
+    <div class="s3">
+      <div class="mirror-head">
+        <span class="ava cust lg" id="mhAva" style="background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700">?</span>
+        <div><div class="mh-t" id="mhName">Đang tải lead…</div><div class="mh-s" id="mhCar"></div></div>
+        <span class="live-badge"><span class="d"></span>ĐANG THEO DÕI TRỰC TIẾP</span>
+      </div>
+      <div class="mirror">
+        <div class="mcol">
+          <div class="mcol-h">💬 Hội thoại của bạn với agent <span class="zalo">ZALO</span></div>
+          <div class="mchat" id="mChat"></div>
+        </div>
+        <div class="mcol">
+          <div class="mcol-h">🧠 Suy nghĩ &amp; công cụ của agent (runtime thật)</div>
+          <div class="mthink" id="mThink"></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -856,6 +1016,131 @@ document.querySelectorAll('.navlink').forEach(a=> a.addEventListener('click', e=
 
 showNode('harness');
 playStage(0);
+
+/* ============ Trải nghiệm thử — live experience ============ */
+// Set PROXY_URL to your deployed read-only proxy to go fully live (see experience-proxy/).
+// Empty => demo mode using a real anonymised sample lead.
+const PROXY_URL = '';
+let tryTimers = [], tryPoll = null;
+const tryWait = (fn,ms)=>{ const t=setTimeout(fn,ms); tryTimers.push(t); return t; };
+const tryClear = ()=>{ tryTimers.forEach(clearTimeout); tryTimers=[]; if(tryPoll){ clearInterval(tryPoll); tryPoll=null; } };
+
+const SAMPLE = { name:'Anh Minh', car:'Honda Brio RS 2021', avatar:'M', feed:[
+  {col:'chat',from:'agent',text:'Nhân tiện anh cho em hỏi thêm, xe anh biển trắng hay biển vàng ạ? Cái này ảnh hưởng tới giá nha anh.'},
+  {col:'chat',from:'cust',text:'Biển trắng như ảnh ấy e'},
+  {col:'chat',from:'agent',text:'Dạ em ghi nhận xe biển trắng á 🙏 Anh rửa kỹ rồi chụp gửi em, em xem và đẩy các bên mua giúp anh nha.'},
+  {col:'chat',from:'cust',text:'Okay e'},
+  {col:'chat',from:'agent',text:'Anh xem thêm link phiên đấu giá bên dưới nha — em vừa mở phiên để các bên mua trả giá cho xe mình.'},
+  {col:'chat',from:'agent',text:'Anh bấm vào theo dõi trực tiếp được luôn á 🙏'},
+  {col:'chat',from:'cust',text:'Okay để a xem'},
+  {col:'chat',from:'cust',photo:1,text:'Ảnh giấy đăng kiểm'},
+  {col:'think',kind:'think',lab:'Suy nghĩ',x:'Khách gửi ảnh + “Okay để a xem”. Mình cần đọc ảnh đăng kiểm, xác minh giấy tờ rồi đưa bằng chứng giá.'},
+  {col:'think',kind:'tool',lab:'Nạp kỹ năng',tool:'recall_skills',x:'Gọi lại kỹ năng đã học từ deal trước: signal-reading · zalo-messaging · evidence-sending.'},
+  {col:'think',kind:'tool',lab:'Đọc ảnh (OCR)',tool:'read_image',x:'Đọc giấy đăng kiểm: chu kỳ kiểm định còn hạn đến 2028, xe biển trắng — khớp lời khách.'},
+  {col:'think',kind:'think',lab:'Suy nghĩ',x:'Giấy tờ ổn. Gửi bằng chứng giá thị trường để neo kỳ vọng của khách vào số liệu thật.'},
+  {col:'think',kind:'tool',lab:'Gửi bằng chứng giá',tool:'send_evidence',x:'Gửi báo cáo định giá Honda Brio RS 2021 (giá đấu + khoảng giá thị trường).'},
+  {col:'chat',from:'agent',photo:1,text:'Hình ảnh · bảng giá thị trường'},
+  {col:'think',kind:'tool',lab:'Guardrail kiểm duyệt',tool:'review_message',x:'Soi lại tin nhắn nháp trước khi gửi cho khách.'},
+  {col:'think',kind:'guard',lab:'Guardrail CHẶN',tool:'price_quote_guard',x:'⛔ Chặn tin: bản nháp trích lại giá 350tr của khách — vượt trần đàm phán 287tr. Không để agent “lỡ mồm” cam kết sai giá cho Vucar.',chip:'block'},
+  {col:'think',kind:'think',lab:'Suy nghĩ',x:'Bị chặn vì nhắc con số vượt vùng giá. Viết lại tin: chỉ xác nhận giấy tờ + xin mức giá mục tiêu, bỏ số vượt trần.'},
+  {col:'think',kind:'tool',lab:'Gửi Zalo (đã duyệt)',tool:'send_zalo_message',x:'Gửi lại phiên bản an toàn cho khách.',chip:'ok'},
+  {col:'chat',from:'agent',text:'Cảm ơn anh gửi ảnh đăng kiểm ạ, em thấy giấy tờ còn hạn tốt đến năm 2028 nha anh.'},
+  {col:'chat',from:'agent',text:'Em vừa gửi bảng giá thị trường bên dưới cho anh tham khảo. Nhìn vào giao dịch thực tế thì mức này khá sát ạ.'},
+  {col:'chat',from:'agent',text:'Anh cho em xin mức giá “chấp nhận nhất” để em cố gắng tìm bên mua phù hợp giúp nha?'},
+  {col:'think',kind:'tool',lab:'Cập nhật phiên',tool:'update_session',x:'Ghi trạng thái: đang chờ mức giá sàn của khách; lần chạm cuối = đã gửi bằng chứng giá.'},
+  {col:'think',kind:'done',lab:'Hoàn tất lượt',x:'Xong lượt: đọc đăng kiểm · gửi bằng chứng giá · xin mức giá mục tiêu. Đang chờ khách phản hồi.'}
+]};
+
+const CALL_LINES = [
+  'Xin chào, đây là trợ lý ảo của Vucar 👋',
+  'Em gọi để xác nhận mình đang muốn bán chiếc {car} đúng không ạ?',
+  'Dạ em ghi nhận. Ngay bây giờ em sẽ nhắn Zalo để hỗ trợ mình định giá và tìm người mua nhé.',
+  'Mình bấm “Xong cuộc gọi” để xem em làm việc trực tiếp ạ.'
+];
+
+function tryStep(n){
+  ['1','2','3'].forEach(s=>$('tryS'+s).classList.toggle('on', s===String(n)));
+  document.querySelectorAll('#tryProg .try-dot').forEach(d=>{
+    const s=+d.dataset.s; d.classList.toggle('on', s===n); d.classList.toggle('done', s<n);
+  });
+}
+function openTry(){ $('tryOv').classList.add('on'); document.body.style.overflow='hidden'; tryStep(1); }
+function closeTry(){ tryClear(); $('tryOv').classList.remove('on'); document.body.style.overflow=''; }
+
+// step 2 — bot call, typewriter captions
+let curLead = SAMPLE;
+function runCall(){
+  tryStep(2);
+  const cap=$('callCap'); cap.innerHTML='<span class="cur"></span>'; let li=0;
+  function typeLine(){
+    if(li>=CALL_LINES.length){ return; }
+    const full=CALL_LINES[li].replace('{car}', curLead.car||'xe của mình'); let ci=0;
+    (function typeChar(){
+      cap.innerHTML = full.slice(0,ci) + '<span class="cur"></span>';
+      if(ci++<full.length){ tryWait(typeChar, 26); }
+      else { li++; tryWait(typeLine, 1100); }
+    })();
+  }
+  typeLine();
+}
+
+// step 3 — live mirror
+function msgHTML(m){
+  const ph = m.photo?' photo':'';
+  if(m.from==='cust') return `<div class="line cust"><span class="ava cust" data-init="${(curLead.avatar||'K')}"></span><div class="bubble${ph}">${m.photo?'📷 ':''}${m.text}</div></div>`;
+  return `<div class="line ai"><div class="bubble${ph}">${m.photo?'🖼️ ':''}${m.text}</div><span class="ava" style="background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:11px">V</span></div>`;
+}
+function tkHTML(t){
+  const cls = t.kind==='guard'?'guard':(t.kind==='think'?'think':'');
+  const chip = t.chip==='block'?'<span class="tk-chip block">BỊ CHẶN → viết lại</span>':(t.chip==='ok'?'<span class="tk-chip ok">✓ đã duyệt · đã gửi</span>':'');
+  const tool = t.tool?`<code>${t.tool}</code>`:'';
+  return `<div class="tk ${cls}"><span class="tk-dot"></span><div class="tk-b"><div class="tk-lab">${t.lab} ${tool}</div><div class="tk-x">${t.x}</div>${chip}</div></div>`;
+}
+function startMirror(data){
+  curLead=data;
+  $('mhName').textContent = data.name||'Lead của bạn';
+  $('mhCar').textContent = data.car||'';
+  $('mhAva').textContent = (data.avatar||(data.name||'?').trim()[0]||'?');
+  $('mChat').innerHTML=''; $('mThink').innerHTML='';
+  tryStep(3);
+  const feed=data.feed||[]; let i=0;
+  const chat=$('mChat'), think=$('mThink');
+  function cur(on){
+    const ex=think.querySelector('.mthink-cur'); if(ex) ex.remove();
+    if(on){ think.insertAdjacentHTML('beforeend','<div class="mthink-cur"><span class="cur"></span>Agent đang xử lý…</div>'); think.scrollTop=think.scrollHeight; }
+  }
+  function play(){
+    if(i>=feed.length){ cur(false); return; }
+    const it=feed[i++];
+    if(it.col==='chat'){ chat.insertAdjacentHTML('beforeend', msgHTML(it)); chat.scrollTop=chat.scrollHeight; cur(false); tryWait(play, it.from==='cust'?820:1000); }
+    else { cur(false); think.insertAdjacentHTML('beforeend', tkHTML(it)); think.scrollTop=think.scrollHeight; const slow=it.kind==='guard'||it.kind==='done'; if(i<feed.length && feed[i].col==='think') cur(true); tryWait(play, slow?1650:1080); }
+  }
+  tryWait(play, 500);
+}
+
+// data source: live proxy or sample
+async function fetchLead(phone){
+  if(!PROXY_URL) return SAMPLE;
+  const r = await fetch(`${PROXY_URL}?phone=${encodeURIComponent(phone)}`);
+  if(!r.ok) throw new Error('proxy '+r.status);
+  const d = await r.json();               // {name, car, avatar, feed:[{col,from,text,photo}|{col,kind,lab,tool,x,chip}]}
+  if(!d || !d.found) throw new Error('not found');
+  return d;
+}
+
+// wiring
+$('tryLink').addEventListener('click', e=>{ e.preventDefault(); openTry(); });
+$('tryClose').addEventListener('click', closeTry);
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('tryOv').classList.contains('on')) closeTry(); });
+$('tryPhone').addEventListener('input', e=>{ const digs=e.target.value.replace(/\D/g,''); $('tryStart').disabled = digs.length<9; });
+$('tryStart').addEventListener('click', async ()=>{
+  const phone=$('tryPhone').value.replace(/\D/g,'');
+  try{ curLead = await fetchLead(phone); }catch(_){ curLead = SAMPLE; }
+  runCall();
+});
+$('tryMock').addEventListener('click', ()=>{ curLead=SAMPLE; runCall(); });
+$('callDone').addEventListener('click', ()=> startMirror(curLead));
+$('callEnd').addEventListener('click', closeTry);
 
 </script>
 </body>
