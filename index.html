@@ -6,25 +6,27 @@
 <title>Vucar AI Sales Agent — Demo harness (deal thật)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   *{ box-sizing:border-box; margin:0; padding:0; }
   :root{
-    --bg:#f6f6f4; --card:#ffffff; --border:#e7e7e2; --line:#f1f0ec;
-    --text:#191d24; --muted:#5f6577; --dim:#9aa1af;
-    --blue:#1479e6; --blue-soft:#eaf3fe; --blue-line:#cfe4fb;
+    --bg:#f2f5f7; --card:#ffffff; --border:#e3e9ef; --line:#eef3f7;
+    --text:#0f1b28; --muted:#63717f; --dim:#8b99a3;
+    --blue:#0d7ce8; --blue-deep:#0a68c7; --blue-soft:#eaf7ff; --blue-line:#c7ecff;
+    --accent:#e04121; --accent-soft:#fdeee7; --accent-line:#f6cabd;
     --green:#1a9d54; --green-soft:#eaf7ef;
     --amber:#b7791f; --teal:#0e9aa7; --red:#e5484d;
     --font-ui:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    --font-display:'Newsreader',Georgia,'Times New Roman',serif;
-    --shadow:0 1px 2px rgba(20,25,40,.04), 0 8px 24px -12px rgba(20,25,40,.10);
+    --font-head:'Plus Jakarta Sans',var(--font-ui);
+    --font-display:'Unbounded',var(--font-head);
+    --shadow:0 1px 2px rgba(15,27,40,.04), 0 10px 28px -14px rgba(15,27,40,.12);
   }
   body{ font-family:var(--font-ui); background:var(--bg); color:var(--text); line-height:1.5; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; display:flex; flex-direction:column; min-height:100vh; }
   code{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
 
   /* Top bar */
   .topbar{ background:var(--card); border-bottom:1px solid var(--border); padding:12px 24px; display:flex; align-items:center; gap:20px; position:sticky; top:0; z-index:50; }
-  .brand{ display:flex; align-items:center; gap:9px; font-weight:700; font-size:19px; color:var(--blue); letter-spacing:-.4px; }
+  .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-weight:700; font-size:17px; color:var(--blue); letter-spacing:-.3px; }
   .brand svg{ width:26px; height:26px; }
   .steps{ display:flex; gap:6px; margin:0 auto; }
   .step{ display:flex; align-items:center; gap:8px; padding:7px 14px; border-radius:8px; border:1px solid var(--border); background:var(--card); cursor:pointer; transition:.15s; }
@@ -53,7 +55,7 @@
   .lead .who small{ display:block; font-weight:400; color:var(--muted); font-size:12px; margin-top:1px; }
   .lead .price{ margin-left:auto; text-align:right; }
   .lead .price .k{ font-size:10.5px; color:var(--dim); }
-  .lead .price .v{ font-size:15px; font-weight:700; color:var(--blue); }
+  .lead .price .v{ font-size:16px; font-weight:800; letter-spacing:-.3px; color:var(--accent); }
 
   /* Avatar */
   .ava{ border-radius:50%; position:relative; overflow:hidden; background:var(--blue); color:#fff; display:inline-flex; align-items:center; justify-content:center; font-weight:600; flex:0 0 auto; }
@@ -126,7 +128,7 @@
   .wg-result b{ color:var(--blue); font-size:16px; }
   .p-line{ display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); padding:5px 0; }
   .p-line.big{ font-size:14px; color:var(--text); font-weight:600; padding:8px 0 10px; }
-  .p-line.big b{ color:var(--green); }
+  .p-line.big b{ color:var(--accent); }
   .fu-top{ display:flex; align-items:center; justify-content:space-between; margin-bottom:9px; }
   .fu-lbl{ font-size:13px; font-weight:600; color:var(--text); }
   .fu-auto{ font-size:11px; font-weight:600; color:var(--blue); background:var(--blue-soft); border-radius:20px; padding:2px 9px; }
@@ -185,13 +187,14 @@
   .navlink:hover{ color:var(--blue); background:var(--blue-soft); }
   .eyebrow{ text-align:center; font-size:11.5px; font-weight:600; letter-spacing:2.6px; text-transform:uppercase; color:var(--blue); margin-bottom:14px; }
   .deal-head{ grid-column:1/-1; margin-bottom:22px; }
-  .deal-head .dh-t{ font-family:var(--font-display); font-size:clamp(28px,5vw,38px); font-weight:500; letter-spacing:-.4px; line-height:1.1; text-align:center; }
+  .deal-head .dh-t{ font-family:var(--font-display); font-size:clamp(23px,3.7vw,32px); font-weight:600; letter-spacing:-.5px; line-height:1.24; text-align:center; }
   .deal-head .dh-s{ text-align:center; color:var(--muted); font-size:15px; line-height:1.6; margin:10px auto 22px; max-width:620px; }
   .deal-head .steps{ justify-content:center; }
 
   /* Architecture view */
   .archwrap{ max-width:1040px; margin:0 auto; padding:26px 22px 44px; }
-  .arch-title{ font-family:var(--font-display); text-align:center; font-size:clamp(25px,4.5vw,34px); font-weight:500; letter-spacing:-.4px; line-height:1.12; }
+  .arch-title{ font-family:var(--font-display); text-align:center; font-size:clamp(21px,3.4vw,29px); font-weight:600; letter-spacing:-.4px; line-height:1.26; }
+  .stage-head h1,.section-lbl,.hh,.dfh,.chat-top .who,.opsg .ogh{ font-family:var(--font-head); }
   .arch-sub{ text-align:center; color:var(--muted); font-size:14.5px; margin-top:8px; max-width:680px; margin-left:auto; margin-right:auto; line-height:1.6; }
   .section-lbl{ font-size:12px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:var(--dim); text-align:center; margin:44px 0 18px; }
   .diagram{ display:grid; grid-template-columns:1fr 44px 1.15fr 44px 1fr; grid-template-rows:auto 30px auto 30px auto; align-items:center; justify-items:center; max-width:820px; margin:0 auto; }
@@ -295,16 +298,16 @@
   .behav-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; max-width:940px; margin:0 auto; }
   @media(max-width:820px){ .behav-grid{ grid-template-columns:repeat(2,1fr); } }
   .bcard{ background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px 12px; text-align:center; }
-  .bcard.on{ border-color:#6b4ef0; box-shadow:0 0 0 2px #f1eeff; }
+  .bcard.on{ border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft); }
   .bcard .bi{ font-size:22px; line-height:1; }
   .bcard .bn{ font-size:13px; font-weight:700; margin-top:7px; }
-  .bcard .bapp{ font-size:12px; color:#6b4ef0; font-weight:700; margin-top:4px; }
+  .bcard .bapp{ font-size:12px; color:var(--blue); font-weight:700; margin-top:4px; }
   .bcard .bw{ font-size:10.5px; color:var(--dim); background:var(--bg); border:1px solid var(--border); border-radius:20px; padding:1px 8px; display:inline-block; margin-top:5px; }
-  .bcard .bhere{ display:inline-block; margin-top:5px; font-size:10px; font-weight:700; color:#6b4ef0; background:#f1eeff; border-radius:20px; padding:1px 8px; }
+  .bcard .bhere{ display:inline-block; margin-top:5px; font-size:10px; font-weight:700; color:var(--accent); background:var(--accent-soft); border-radius:20px; padding:1px 8px; }
 
   /* Behavior signal chip (deal chat) — Idea C */
-  .sigchip{ align-self:flex-start; margin:-3px 0 2px 36px; font-size:10.5px; font-weight:600; color:#6b4ef0; background:#f1eeff; border:1px solid #ddd4ff; border-radius:20px; padding:2px 10px; animation:pop .3s ease; }
-  .arche{ font-size:10.5px; font-weight:700; color:#6b4ef0; background:#f1eeff; border:1px solid #ddd4ff; border-radius:20px; padding:2px 9px; margin-left:8px; white-space:nowrap; }
+  .sigchip{ align-self:flex-start; margin:-3px 0 2px 36px; font-size:10.5px; font-weight:600; color:var(--accent); background:var(--accent-soft); border:1px solid var(--accent-line); border-radius:20px; padding:2px 10px; animation:pop .3s ease; }
+  .arche{ font-size:10.5px; font-weight:700; color:var(--blue); background:var(--blue-soft); border:1px solid var(--blue-line); border-radius:20px; padding:2px 9px; margin-left:8px; white-space:nowrap; }
 
   /* Raw log (deal view) */
   .rawlog{ margin:12px 16px 4px; border-top:1px solid var(--line); }
@@ -368,7 +371,7 @@
 
 <div class="topbar">
   <div class="brand">
-    <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#1479e6"/><path d="M13 20 h22 l-3 5 h-16 z" fill="#fff"/><rect x="16" y="26" width="16" height="4" rx="2" fill="#fff"/></svg>
+    <svg viewBox="0 0 48 48" fill="none"><rect width="48" height="48" rx="11" fill="#0d7ce8"/><path d="M13 20 h22 l-3 5 h-16 z" fill="#fff"/><rect x="16" y="26" width="16" height="4" rx="2" fill="#fff"/></svg>
     Vucar
   </div>
   <div class="views" id="views" style="background:transparent;padding:0;gap:2px">
@@ -431,12 +434,12 @@
   </div>
   <div class="section-note">Mỗi lượt: agent suy nghĩ → gọi tool → nhận kết quả, lặp lại. Trung bình <b>~15 lần gọi tool/lượt</b>, trên <b>100 loại tool</b>.</div>
   <div class="toolbars">
-    <div class="tbrow"><span class="tbname">recall_skills</span><span class="tbbar"><i style="width:100%;background:#6b4ef0"></i></span><span class="tbval">174.5K</span></div>
-    <div class="tbrow"><span class="tbname">read_session_state</span><span class="tbbar"><i style="width:43%;background:#6b4ef0"></i></span><span class="tbval">74.6K</span></div>
+    <div class="tbrow"><span class="tbname">recall_skills</span><span class="tbbar"><i style="width:100%;background:#0d7ce8"></i></span><span class="tbval">174.5K</span></div>
+    <div class="tbrow"><span class="tbname">read_session_state</span><span class="tbbar"><i style="width:43%;background:#0d7ce8"></i></span><span class="tbval">74.6K</span></div>
     <div class="tbrow"><span class="tbname">send_zalo_message</span><span class="tbbar"><i style="width:39%;background:#0e9aa7"></i></span><span class="tbval">68.0K</span></div>
     <div class="tbrow"><span class="tbname">review_message</span><span class="tbbar"><i style="width:36%;background:#1a9d54"></i></span><span class="tbval">62.8K</span></div>
     <div class="tbrow"><span class="tbname">schedule_followup</span><span class="tbbar"><i style="width:35%;background:#b7791f"></i></span><span class="tbval">61.6K</span></div>
-    <div class="tbrow"><span class="tbname">compute_unified_deal_signals</span><span class="tbbar"><i style="width:32%;background:#1479e6"></i></span><span class="tbval">56.0K</span></div>
+    <div class="tbrow"><span class="tbname">compute_unified_deal_signals</span><span class="tbbar"><i style="width:32%;background:#0d7ce8"></i></span><span class="tbval">56.0K</span></div>
     <div class="tbrow"><span class="tbname">notify_pic</span><span class="tbbar"><i style="width:11%;background:#e5484d"></i></span><span class="tbval">19.3K</span></div>
   </div>
   <div class="why-callout"><b>Vì sao nó chạy được:</b> tool được gọi nhiều nhất là <b>recall_skills</b> (174.5K lần) — mỗi lượt agent nạp lại kỹ năng đã học từ deal trước; cùng <b>compute_unified_deal_signals</b> đọc tín hiệu hành vi khách. Agent giỏi vì đứng trên <b>dữ liệu hành vi tích luỹ</b>, không phải prompt tĩnh.</div>
@@ -725,7 +728,7 @@ const STAGES = [
 ];
 
 const NMAP = {
-  harness:{lbl:'Harness', c:'#1479e6'}, session:{lbl:'Bộ nhớ & Kỹ năng', c:'#6b4ef0'},
+  harness:{lbl:'Harness', c:'#0d7ce8'}, session:{lbl:'Bộ nhớ & Kỹ năng', c:'#0d7ce8'},
   tools:{lbl:'Tools + MCP', c:'#0e9aa7'}, sandbox:{lbl:'Guardrail', c:'#1a9d54'}, orch:{lbl:'Orchestration', c:'#b7791f'}
 };
 const CH = { khach:'Kênh · Khách', dealer:'Kênh · Dealer', kd:'Kênh · Kiểm định' };
@@ -833,7 +836,7 @@ function thinkStep(turn){
   }
   const st = steps[turn._i++];
   lightNode(st.k);
-  const nm = NMAP[st.k]||{lbl:'',c:'#1479e6'};
+  const nm = NMAP[st.k]||{lbl:'',c:'#0d7ce8'};
   $('procStep').innerHTML=`<span class="cur"></span>Agent đang xử lý — <b style="color:${nm.c}">${nm.lbl}</b>`;
   const el=document.createElement('div'); el.className='si'+(st.hi?' hi':'');
   el.innerHTML=`<span class="sdot"></span><div class="sb"><div class="slab">${st.lab||nm.lbl}</div>`+
