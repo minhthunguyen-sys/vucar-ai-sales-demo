@@ -422,28 +422,7 @@
     <div class="bcard"><div class="bi">🛠️</div><div class="bn">Tiết lộ lỗi xe khi đàm phán</div><div class="bw">đang theo dõi</div></div>
     <div class="bcard"><div class="bi">💭</div><div class="bn">Chưa biết giá xe mình</div><div class="bw">đang theo dõi</div></div>
   </div>
-  <div class="section-note">16 nhóm hành vi, mỗi nhóm một cách xử lý riêng rút từ deal thật — nhóm có số là đã áp dụng ổn định, nhóm “đang học/theo dõi” là pattern mới đang được kiểm chứng. Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_insights.customer_type</code> (db=9).</div>
-
-  <div class="section-lbl">Bên trong một lượt chạy — agent được tổ chức thế nào</div>
-  <div class="logflow">
-    <span class="lf k">reasoning</span><span class="lf-a">→</span>
-    <span class="lf">tool_start</span><span class="lf-a">→</span>
-    <span class="lf">tool_call</span><span class="lf-a">→</span>
-    <span class="lf">tool_result</span><span class="lf-a">→</span>
-    <span class="lf k">done</span>
-  </div>
-  <div class="section-note">Mỗi lượt: agent suy nghĩ → gọi tool → nhận kết quả, lặp lại. Trung bình <b>~15 lần gọi tool/lượt</b>, trên <b>100 loại tool</b>.</div>
-  <div class="toolbars">
-    <div class="tbrow"><span class="tbname">recall_skills</span><span class="tbbar"><i style="width:100%;background:#0d7ce8"></i></span><span class="tbval">174.5K</span></div>
-    <div class="tbrow"><span class="tbname">read_session_state</span><span class="tbbar"><i style="width:43%;background:#0d7ce8"></i></span><span class="tbval">74.6K</span></div>
-    <div class="tbrow"><span class="tbname">send_zalo_message</span><span class="tbbar"><i style="width:39%;background:#0e9aa7"></i></span><span class="tbval">68.0K</span></div>
-    <div class="tbrow"><span class="tbname">review_message</span><span class="tbbar"><i style="width:36%;background:#1a9d54"></i></span><span class="tbval">62.8K</span></div>
-    <div class="tbrow"><span class="tbname">schedule_followup</span><span class="tbbar"><i style="width:35%;background:#b7791f"></i></span><span class="tbval">61.6K</span></div>
-    <div class="tbrow"><span class="tbname">compute_unified_deal_signals</span><span class="tbbar"><i style="width:32%;background:#0d7ce8"></i></span><span class="tbval">56.0K</span></div>
-    <div class="tbrow"><span class="tbname">notify_pic</span><span class="tbbar"><i style="width:11%;background:#e5484d"></i></span><span class="tbval">19.3K</span></div>
-  </div>
-  <div class="why-callout"><b>Vì sao nó chạy được:</b> tool được gọi nhiều nhất là <b>recall_skills</b> (174.5K lần) — mỗi lượt agent nạp lại kỹ năng đã học từ deal trước; cùng <b>compute_unified_deal_signals</b> đọc tín hiệu hành vi khách. Agent giỏi vì đứng trên <b>dữ liệu hành vi tích luỹ</b>, không phải prompt tĩnh.</div>
-  <div class="section-note">Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_logs</code> / <code style="font-family:ui-monospace,Menlo,monospace">agent_pipeline_steps</code> (db=9) · 3,93M dòng log · 73.968 lượt chạy</div>
+  <div class="section-note">16 nhóm hành vi, mỗi nhóm một cách xử lý riêng rút từ deal thật — nhóm có số là đã áp dụng ổn định, nhóm “đang học/theo dõi” là pattern mới đang được kiểm chứng. Nguồn: <code style="font-family:ui-monospace,Menlo,monospace">agent_insights.customer_type</code> (db=9) · 3,93M dòng log · 73.968 lượt chạy.</div>
 </div>
 
 <!-- VIEW: AI Operations -->
