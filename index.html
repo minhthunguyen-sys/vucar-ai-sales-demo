@@ -1021,10 +1021,9 @@ showNode('harness');
 playStage(0);
 
 /* ============ Trải nghiệm thử — live experience ============ */
-// Set PROXY_URL to the vucar-e2e read-only route to go fully live:
-//   https://<your-vucar-e2e-app>/api/lead-runtime   (route: app/api/lead-runtime/route.ts)
+// Live read-only route in the vucar-e2e app (app/api/lead-runtime/route.ts).
 // Empty => demo mode using a real anonymised sample lead.
-const PROXY_URL = '';
+const PROXY_URL = 'https://e2e-management.vucar.vn/api/lead-runtime';
 let tryTimers = [], tryPoll = null;
 const tryWait = (fn,ms)=>{ const t=setTimeout(fn,ms); tryTimers.push(t); return t; };
 const tryClear = ()=>{ tryTimers.forEach(clearTimeout); tryTimers=[]; if(tryPoll){ clearInterval(tryPoll); tryPoll=null; } };
